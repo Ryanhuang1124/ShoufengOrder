@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>950471906152-vm8vd89nc2oklgkesshasqivf5se11rt.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.950471906152-vm8vd89nc2oklgkesshasqivf5se11rt</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAq-6jQOJQw6H9rmxCaWFxbzGVSkEVSD0A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>950471906152</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ryan.shoufengOrder</string>
+	<key>PROJECT_ID</key>
+	<string>shoufeng-order</string>
+	<key>STORAGE_BUCKET</key>
+	<string>shoufeng-order.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:950471906152:ios:8dcd644f78ee8c3d82fcdd</string>
+	<key>DATABASE_URL</key>
+	<string>https://shoufeng-order.firebaseio.com</string>
+</dict>
+</plist>
