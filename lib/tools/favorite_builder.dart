@@ -30,7 +30,23 @@ void prefFavList(MenuValue obj, String storeName) async {
       temp.add(obj.note);
       temp.add(obj.count.toString());
     }
-
     pref.setStringList(storeName, temp);
   }
+}
+
+List<MenuValue> makeFavToObjList(List<String> temp) {
+  List<MenuValue> objTemp = [];
+
+  if (temp != null) {
+    for (int i = 0; i < temp.length; i++) {
+      if (i % 4 == 0) {
+        MenuValue obj = new MenuValue(null, temp[i], null);
+        obj.notePrice = temp[i + 1];
+        obj.note = temp[i + 2];
+        obj.count = int.parse(temp[i + 3]);
+        objTemp.add(obj);
+      }
+    }
+  }
+  return objTemp != null ? objTemp : null;
 }

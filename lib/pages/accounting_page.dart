@@ -139,10 +139,13 @@ class _AccountPageState extends State<AccountPage>
                     onTap: () {
                       Navigator.pushNamed(context, '/accounting');
                     },
-                    child: Container(
-                      child: Image.asset(
-                        'images/message_in_a_bottle.png',
-                        scale: 5,
+                    child: Hero(
+                      tag: 'bottle_accounting',
+                      child: Container(
+                        child: Image.asset(
+                          'images/message_in_a_bottle.png',
+                          scale: 5,
+                        ),
                       ),
                     ),
                   ),

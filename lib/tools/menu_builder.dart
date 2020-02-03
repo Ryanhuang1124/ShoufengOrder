@@ -25,7 +25,6 @@ Future<List<MenuValue>> getMenu(fireStore) async {
   mise.data.forEach((k, v) {
     imanomise = v;
   });
-  print('storeName:$imanomise');
 //  fetch storeName
 
   final menu = await fireStore.collection(imanomise).getDocuments();
@@ -36,7 +35,6 @@ Future<List<MenuValue>> getMenu(fireStore) async {
       menuList.add(new MenuValue(menu.documentID, k, v));
     });
   }
-  print('menu get');
   return menuList;
 }
 
@@ -50,7 +48,6 @@ Future<List<String>> getStore(fireStore) async {
     storeList.add(k);
   });
 
-  print('storeList get');
   return storeList;
 }
 
@@ -82,8 +79,6 @@ void uploadImanomise(fireStore, storeName) async {
       .document('imanomise')
       .setData({'imanomise': storeName}, merge: false);
 }
-
-void uploadFinalOrder() {}
 
 bool isNumeric(String s) {
   if (s == null) {

@@ -37,19 +37,19 @@ Future<bool> getUserIsLogin() async {
   }
 }
 
-void setUserIsLogin(bool isLogin) async {
+void setUserCache(bool isLogin, String userName) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   prefs.setBool('isLogin', isLogin);
+  prefs.setString('userName', userName);
 }
 
 Future<List<UserData>> getMemberID(fireStore) async {
   List<UserData> temp = [];
-  final stores = await fireStore.collection('Members').document('ID').get();
+  final stores = await fireStore.collection('MemberData').document('ID').get();
 
   stores.data.forEach((k, v) {
     temp.add(UserData(v, k));
   });
-  print(temp.length);
 
   return temp;
 }

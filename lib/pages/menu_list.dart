@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shoufeng_order/tools/accounting_builder.dart';
 import 'package:shoufeng_order/tools/favorite_builder.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
@@ -10,7 +11,6 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:easy_dialog/easy_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
-import 'package:shoufeng_order/tools/login_builder.dart';
 
 class MenuList extends StatefulWidget {
   @override
@@ -99,7 +99,6 @@ class _MenuListState extends State<MenuList> {
               );
             }
           }
-
           return Expanded(
             child: Container(
               child: Padding(
@@ -306,6 +305,7 @@ class _MenuListState extends State<MenuList> {
                           child: RaisedButton(
                             onPressed: () {
                               EasyDialog(
+                                  //
                                   cardColor: Color.fromRGBO(18, 18, 18, 1),
                                   cornerRadius: 15.0,
                                   fogOpacity: 0.1,
@@ -417,6 +417,11 @@ class _MenuListState extends State<MenuList> {
                                                 ),
                                                 onPressed: () {
                                                   setState(() {
+                                                    clearOrderCache(fireStore);
+                                                    uploadFinalOrder(
+                                                        fireStore, temp);
+                                                    uploadDefaultOrderState(
+                                                        fireStore, temp);
                                                     menuObjList =
                                                         getMenu(fireStore);
                                                     Navigator.popUntil(
@@ -479,12 +484,24 @@ class _MenuListState extends State<MenuList> {
                       height: MediaQuery.of(context).size.height / 30,
                     ),
                     Expanded(
-                      child: Container(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: widtemp,
-                        ),
-                      ),
+                      child: temp.length > 0
+                          ? Container(
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: widtemp,
+                              ),
+                            )
+                          : Container(
+                              child: Text(
+                                '這裡什麼都沒有..',
+                                style: TextStyle(
+                                    fontFamily: 'Yuanti',
+                                    fontSize:
+                                        MediaQuery.of(context).size.width /
+                                            17.81,
+                                    color: Colors.white),
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -637,6 +654,7 @@ class _MenuListState extends State<MenuList> {
                                             ),
                                             onPressed: () {
                                               setState(() {
+                                                print(storeName);
                                                 pref.remove(storeName);
                                                 Navigator.popUntil(
                                                   context,
@@ -689,12 +707,224 @@ class _MenuListState extends State<MenuList> {
                       minWidth: MediaQuery.of(context).size.width / 6.53,
                       height: MediaQuery.of(context).size.height / 26.56,
                       buttonColor: Color.fromRGBO(29, 185, 84, 1),
-                      child: RaisedButton(
-                        onPressed: () {}, //todo
-                        shape: StadiumBorder(),
-                        child: Icon(Icons.arrow_forward),
+                      child: FutureBuilder<List<String>>(
+                        future: imanoMise,
+                        builder: (context, snapshot) {
+                          List<String> temp;
+                          List<MenuValue> objTemp;
+                          if (snapshot.hasData) {
+                            storeName = snapshot.data[0];
+                            temp = pref.getStringList(storeName);
+                            objTemp = makeFavToObjList(temp);
+                          }
+                          return RaisedButton(
+                            onPressed: () {
+                              if (objTemp.length != 0) {
+                                EasyDialog(
+                                    cardColor: Color.fromRGBO(18, 18, 18, 1),
+                                    cornerRadius: 15.0,
+                                    fogOpacity: 0.1,
+                                    width: MediaQuery.of(context).size.width /
+                                        1.568,
+                                    height: MediaQuery.of(context).size.height /
+                                        4.25,
+                                    contentPadding: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height /
+                                          70.83,
+                                    ), // Needed for the button design
+                                    contentList: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 15.0)),
+                                            Text(
+                                              "提醒",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Yuanti',
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          23.05),
+                                              textScaleFactor: 1.3,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 15.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          child: Text(
+                                            '確定提交？',
+                                            style: TextStyle(
+                                                fontFamily: 'Yuanti',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    17.81,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.greenAccent,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(10.0),
+                                                  ),
+                                                ),
+                                                child: FlatButton(
+                                                  child: Text(
+                                                    "Cancel",
+                                                    textScaleFactor: 1.6,
+                                                    style: TextStyle(
+                                                        fontFamily: 'LilitaOne',
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            24.5),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 1,
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.greenAccent,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomRight:
+                                                          Radius.circular(10.0),
+                                                    )),
+                                                child: FlatButton(
+                                                  child: Text(
+                                                    "OK",
+                                                    textScaleFactor: 1.6,
+                                                    style: TextStyle(
+                                                        fontFamily: 'LilitaOne',
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            23.05),
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      clearOrderCache(
+                                                          fireStore);
+                                                      uploadFinalOrder(
+                                                          fireStore, objTemp);
+                                                      uploadDefaultOrderState(
+                                                          fireStore, objTemp);
+                                                      menuObjList =
+                                                          getMenu(fireStore);
+                                                      Navigator.popUntil(
+                                                        context,
+                                                        ModalRoute.withName(
+                                                            '/menulist'),
+                                                      );
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          '/accounting');
+                                                    });
+                                                    BotToast.showCustomText(
+                                                      toastBuilder: (_) =>
+                                                          Align(
+                                                        alignment:
+                                                            Alignment(0, 0.8),
+                                                        child: Card(
+                                                          child: Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        8),
+                                                            child: Text(
+                                                              '提交成功！',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Yuanti',
+                                                                fontSize: 24,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        18,
+                                                                        18,
+                                                                        18,
+                                                                        1),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      duration:
+                                                          Duration(seconds: 3),
+                                                      onlyOne: true,
+                                                      clickClose: true,
+                                                      ignoreContentClick: true,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ]).show(context);
+                              } else {
+                                BotToast.showCustomText(
+                                  toastBuilder: (_) => Align(
+                                    alignment: Alignment(0, 0.8),
+                                    child: Card(
+                                      child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Text(
+                                            '喜愛列表好像是空的哦..',
+                                            style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: 24,
+                                              color:
+                                                  Color.fromRGBO(18, 18, 18, 1),
+                                            ),
+                                          )),
+                                    ),
+                                  ),
+                                  duration: Duration(seconds: 3),
+                                  onlyOne: true,
+                                  clickClose: true,
+                                  ignoreContentClick: true,
+                                );
+                              }
+                            },
+                            shape: StadiumBorder(),
+                            child: Icon(Icons.arrow_forward),
+                          );
+                        },
                       ),
-                    ),
+                    )
                   ],
                 ),
                 SizedBox(
@@ -1066,7 +1296,6 @@ class _MenuListState extends State<MenuList> {
     imanoMise = getImanomise(fireStore);
     menuObjList = getMenu(fireStore);
     storeList = getStore(fireStore);
-    getTest(fireStore);
   }
 
   @override

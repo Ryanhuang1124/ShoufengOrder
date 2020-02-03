@@ -97,7 +97,6 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {},
                       onChanged: (text) {
                         inputID = text;
-                        print(inputID);
                       },
                       onSubmitted: (data) {
                         print(data.length);
@@ -111,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                       future: userList,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
+                          String userName = '';
                           return Container(
                             width: MediaQuery.of(context).size.width / 3,
                             height: MediaQuery.of(context).size.height / 13,
@@ -136,6 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                                 for (var obj in snapshot.data) {
                                   if (obj.id == inputID) {
                                     isCorrect = true;
+                                    userName = obj.name;
                                   }
                                 }
                                 if (isCorrect == false) {
@@ -168,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                   controller.reverse();
                                 } else {
-                                  setUserIsLogin(true);
+                                  setUserCache(true, userName);
                                   await Future.delayed(
                                     Duration(milliseconds: 1500),
                                   );

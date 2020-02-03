@@ -20,7 +20,7 @@ class _VoteContentState extends State<VoteContent> {
   void voteMenuDialog() {
     slideDialog.showSlideDialog(
       context: context,
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromRGBO(18, 18, 18, 1),
       transitionDuration: Duration(milliseconds: 700),
       child: Expanded(
         child: Container(
@@ -68,7 +68,7 @@ class _VoteContentState extends State<VoteContent> {
                         child: Text(
                           'Drag  to  here',
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Color.fromRGBO(18, 18, 18, 1),
                               fontSize: 32,
                               fontFamily: 'LilitaOne'),
                         ),
@@ -168,7 +168,7 @@ class _VoteContentState extends State<VoteContent> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: Color.fromRGBO(18, 18, 18, 1),
         ),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -185,7 +185,7 @@ class _VoteContentState extends State<VoteContent> {
                         style: TextStyle(
                           fontFamily: 'LilitaOne',
                           fontSize: 70,
-                          color: Color.fromRGBO(27, 180, 82, 1),
+                          color: Color.fromRGBO(29, 185, 84, 1),
                         ),
                       ),
                     ],
@@ -328,7 +328,8 @@ class _VoteContentState extends State<VoteContent> {
                                   child: buttonGlowAvatar(context),
                                   onTap: () {
                                     EasyDialog(
-                                        cardColor: Colors.black,
+                                        cardColor:
+                                            Color.fromRGBO(18, 18, 18, 1),
                                         cornerRadius: 15.0,
                                         fogOpacity: 0.1,
                                         width: 250,
@@ -436,7 +437,7 @@ class _VoteContentState extends State<VoteContent> {
                     return LoadingBouncingGrid.square(
                       size: 100,
                       duration: Duration(milliseconds: 700),
-                      backgroundColor: Color.fromRGBO(27, 180, 82, 1),
+                      backgroundColor: Color.fromRGBO(29, 185, 84, 1),
                     );
                   }
                 },
@@ -484,7 +485,7 @@ class _VoteContentState extends State<VoteContent> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 2,
-                              color: Color.fromRGBO(27, 180, 82, 1),
+                              color: Color.fromRGBO(29, 185, 84, 1),
                             ),
                             borderRadius:
                                 BorderRadius.all(Radius.elliptical(90, 90)),
@@ -493,7 +494,7 @@ class _VoteContentState extends State<VoteContent> {
                               padding: EdgeInsets.all(5),
                               child: Icon(
                                 Icons.add,
-                                color: Color.fromRGBO(27, 180, 82, 1),
+                                color: Color.fromRGBO(29, 185, 84, 1),
                               )),
                         ),
                       ),
@@ -574,12 +575,12 @@ class _VoteContentState extends State<VoteContent> {
                                               border: Border.all(
                                                 width: 5,
                                                 color: Color.fromRGBO(
-                                                    27, 180, 82, 1),
+                                                    29, 185, 84, 1),
                                               ),
                                               borderRadius: BorderRadius.all(
                                                   Radius.elliptical(5, 5)),
                                               color: Color.fromRGBO(
-                                                  27, 180, 82, 1),
+                                                  29, 185, 84, 1),
                                             ),
                                             child: Padding(
                                               padding: EdgeInsets.all(10),
@@ -587,9 +588,11 @@ class _VoteContentState extends State<VoteContent> {
                                                 child: Text(
                                                   obj.storeName,
                                                   style: TextStyle(
-                                                      fontFamily: 'Yuanti',
-                                                      fontSize: 30,
-                                                      color: Colors.black),
+                                                    fontFamily: 'Yuanti',
+                                                    fontSize: 30,
+                                                    color: Color.fromRGBO(
+                                                        18, 18, 18, 1),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -604,7 +607,7 @@ class _VoteContentState extends State<VoteContent> {
                                               border: Border.all(
                                                 width: 5,
                                                 color: Color.fromRGBO(
-                                                    27, 180, 82, 1),
+                                                    29, 185, 84, 1),
                                               ),
                                               borderRadius: BorderRadius.all(
                                                 Radius.elliptical(5, 5),
@@ -619,7 +622,7 @@ class _VoteContentState extends State<VoteContent> {
                                                     fontFamily: 'Yuanti',
                                                     fontSize: 30,
                                                     color: Color.fromRGBO(
-                                                        27, 180, 82, 1),
+                                                        29, 185, 84, 1),
                                                   ),
                                                 ),
                                               ),
@@ -653,7 +656,7 @@ class _VoteContentState extends State<VoteContent> {
                     return LoadingBouncingGrid.square(
                       size: 100,
                       duration: Duration(milliseconds: 700),
-                      backgroundColor: Color.fromRGBO(27, 180, 82, 1),
+                      backgroundColor: Color.fromRGBO(29, 185, 84, 1),
                     );
                   }
                 },
