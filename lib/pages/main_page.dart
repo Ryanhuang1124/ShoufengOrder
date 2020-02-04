@@ -14,14 +14,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentPage = 0;
-  final pages = [
-    VotePage(
-      isShowBottle: true,
-    ),
-    OrderingPage(isShowBottle: true),
-    AccountPage(isShowBottle: true),
-    MemberPage()
-  ];
+  final pages = [VotePage(), OrderingPage(), AccountPage(), MemberPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

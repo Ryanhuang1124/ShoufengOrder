@@ -1055,225 +1055,537 @@ class _MenuListState extends State<MenuList> {
         child: Container(
           child: Padding(
             padding: EdgeInsets.all(MediaQuery.of(context).size.width / 19.6),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.dashboard,
-                      color: Colors.red,
-                      size: MediaQuery.of(context).size.width / 13.06,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 78.4,
-                    ),
-                    Text(
-                      '更換店鋪',
-                      style: TextStyle(
-                          fontFamily: 'Yuanti',
-                          fontSize: MediaQuery.of(context).size.width / 17.81,
-                          color: Colors.white),
-                    ),
-                    Expanded(child: SizedBox()),
-                    FutureBuilder<List<String>>(
-                      future: storeList,
-                      builder: (context, snapshot) {
-                        int rng;
-                        if (snapshot.hasData) {
-                          return BouncingWidget(
-                            onPressed: () {
-                              setState(() {
-                                rng = Random().nextInt(snapshot.data.length);
-                                uploadImanomise(fireStore, snapshot.data[rng]);
-                                imanoMise = getImanomise(fireStore);
-                                menuObjList = getMenu(fireStore);
-                              });
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width / 80),
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                border: Border.all(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: fireStore.collection('FinalState').snapshots(),
+                builder: (context, streamsnapshot) {
+                  return Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.dashboard,
+                            color: Colors.red,
+                            size: MediaQuery.of(context).size.width / 13.06,
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 78.4,
+                          ),
+                          Text(
+                            '更換店鋪',
+                            style: TextStyle(
+                                fontFamily: 'Yuanti',
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 17.81,
+                                color: Colors.white),
+                          ),
+                          Expanded(child: SizedBox()),
+                          FutureBuilder<List<String>>(
+                            future: storeList,
+                            builder: (context, snapshot) {
+                              int rng;
+                              if (snapshot.hasData) {
+                                return BouncingWidget(
+                                  onPressed: () {
+                                    if (streamsnapshot.data.documents.length >
+                                        0) {
+                                      EasyDialog(
+                                          cardColor:
+                                              Color.fromRGBO(18, 18, 18, 1),
+                                          cornerRadius: 15.0,
+                                          fogOpacity: 0.1,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              1.568,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              4.25,
+                                          contentPadding: EdgeInsets.only(
+                                            top: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                70.83,
+                                          ), // Needed for the button design
+                                          contentList: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 15.0)),
+                                                  Text(
+                                                    "提醒",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontFamily: 'Yuanti',
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            23.05),
+                                                    textScaleFactor: 1.3,
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 15.0),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                child: Text(
+                                                  '此店目前已有訂單',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Yuanti',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              17.81,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                child: Text(
+                                                  '無法更改店鋪',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Yuanti',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              17.81,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Colors.greenAccent,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  10.0),
+                                                        ),
+                                                      ),
+                                                      child: FlatButton(
+                                                        child: Text(
+                                                          "Cancel",
+                                                          textScaleFactor: 1.6,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'LilitaOne',
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  24.5),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1,
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors
+                                                              .greenAccent,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    10.0),
+                                                          )),
+                                                      child: FlatButton(
+                                                        child: Text(
+                                                          "OK",
+                                                          textScaleFactor: 1.6,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'LilitaOne',
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  23.05),
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {});
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ]).show(context);
+                                    } else {
+                                      setState(() {
+                                        rng = Random()
+                                            .nextInt(snapshot.data.length);
+                                        uploadImanomise(
+                                            fireStore, snapshot.data[rng]);
+                                        imanoMise = getImanomise(fireStore);
+                                        menuObjList = getMenu(fireStore);
+                                      });
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.width / 80),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '隨機選取',
+                                      style: TextStyle(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              30,
+                                          fontFamily: 'Yuanti',
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return SpinKitThreeBounce(
                                   color: Colors.white,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Text(
-                                '隨機選取',
-                                style: TextStyle(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width / 30,
-                                    fontFamily: 'Yuanti',
-                                    color: Colors.white),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return SpinKitThreeBounce(
-                            color: Colors.white,
-                          );
-                        }
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 30,
-                ),
-                DragTarget<String>(
-                  onWillAccept: (data) {
-                    return data != null;
-                  },
-                  onAccept: (data) {
-                    setState(() {
-                      uploadImanomise(fireStore, data);
-                      imanoMise = getImanomise(fireStore);
-                      menuObjList = getMenu(fireStore);
-                    });
-                    print('$data:accept');
-                  },
-                  builder: (context, a, b) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height / 9.7571,
-                      child: Center(
-                        child: Column(
-                          children: <Widget>[
-                            Text(
-                              'Drag  to  here',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(18, 18, 18, 1),
-                                  fontSize:
-                                      MediaQuery.of(context).size.width / 12.25,
-                                  fontFamily: 'LilitaOne'),
-                            ),
-                            FutureBuilder<List<String>>(
-                              future: imanoMise,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    return Text(
-                                      snapshot.data[0],
-                                      style: TextStyle(
-                                          fontFamily: 'Yuanti',
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              17.81),
-                                    );
-                                  } else {
-                                    return Text(
-                                      '上傳中..',
-                                      style: TextStyle(
-                                          fontFamily: 'Yuanti',
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              17.81),
-                                    );
-                                  }
-                                } else {
-                                  return Text(
-                                    '找不到資料..',
+                                );
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 30,
+                      ),
+                      DragTarget<String>(
+                        onWillAccept: (data) {
+                          return data != null;
+                        },
+                        onAccept: (data) {
+                          setState(() {
+                            if (streamsnapshot.data.documents.length > 0) {
+                              EasyDialog(
+                                  cardColor: Color.fromRGBO(18, 18, 18, 1),
+                                  cornerRadius: 15.0,
+                                  fogOpacity: 0.1,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.568,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4.25,
+                                  contentPadding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height /
+                                        70.83,
+                                  ), // Needed for the button design
+                                  contentList: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 15.0)),
+                                          Text(
+                                            "提醒",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: 'Yuanti',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    23.05),
+                                            textScaleFactor: 1.3,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(left: 15.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          '此店目前已有訂單',
+                                          style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  17.81,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          '無法更改店鋪',
+                                          style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  17.81,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.greenAccent,
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(10.0),
+                                                ),
+                                              ),
+                                              child: FlatButton(
+                                                child: Text(
+                                                  "Cancel",
+                                                  textScaleFactor: 1.6,
+                                                  style: TextStyle(
+                                                      fontFamily: 'LilitaOne',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              24.5),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.greenAccent,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(10.0),
+                                                  )),
+                                              child: FlatButton(
+                                                child: Text(
+                                                  "OK",
+                                                  textScaleFactor: 1.6,
+                                                  style: TextStyle(
+                                                      fontFamily: 'LilitaOne',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              23.05),
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {});
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]).show(context);
+                            } else {
+                              uploadImanomise(fireStore, data);
+                              imanoMise = getImanomise(fireStore);
+                              menuObjList = getMenu(fireStore);
+                            }
+                          });
+                        },
+                        builder: (context, a, b) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height / 9.7571,
+                            child: Center(
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'Drag  to  here',
                                     style: TextStyle(
-                                        fontFamily: 'Yuanti',
+                                        color: Color.fromRGBO(18, 18, 18, 1),
                                         fontSize:
                                             MediaQuery.of(context).size.width /
-                                                17.81),
-                                  );
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(29, 185, 84, 0.75),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 28.33,
-                ),
-                FutureBuilder<List<String>>(
-                  future: storeList,
-                  builder: (context, snapshot) {
-                    List<Widget> storeList = List<Widget>();
-                    if (snapshot.hasData) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        for (var store in snapshot.data) {
-                          storeList.add(LongPressDraggable<String>(
-                            maxSimultaneousDrags: 1,
-                            childWhenDragging: Container(),
-                            data: store,
-                            feedback: Material(
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(10, 9)),
-                              color: Color.fromRGBO(29, 185, 84, 1),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.elliptical(10, 9)),
-                                    color: Color.fromRGBO(29, 185, 84, 1)),
-                                child: Center(
-                                    child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              13.06,
-                                      fontFamily: 'Yuanti'),
-                                )),
+                                                12.25,
+                                        fontFamily: 'LilitaOne'),
+                                  ),
+                                  FutureBuilder<List<String>>(
+                                    future: imanoMise,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.done) {
+                                          return Text(
+                                            snapshot.data[0],
+                                            style: TextStyle(
+                                                fontFamily: 'Yuanti',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    17.81),
+                                          );
+                                        } else {
+                                          return Text(
+                                            '上傳中..',
+                                            style: TextStyle(
+                                                fontFamily: 'Yuanti',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    17.81),
+                                          );
+                                        }
+                                      } else {
+                                        return Text(
+                                          '找不到資料..',
+                                          style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  17.81),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width / 39.2),
-                              child: Container(
-                                decoration: BoxDecoration(
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(29, 185, 84, 0.75),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 28.33,
+                      ),
+                      FutureBuilder<List<String>>(
+                        future: storeList,
+                        builder: (context, snapshot) {
+                          List<Widget> storeList = List<Widget>();
+                          if (snapshot.hasData) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              for (var store in snapshot.data) {
+                                storeList.add(LongPressDraggable<String>(
+                                  maxSimultaneousDrags: 1,
+                                  childWhenDragging: Container(),
+                                  data: store,
+                                  feedback: Material(
                                     borderRadius: BorderRadius.all(
                                         Radius.elliptical(10, 9)),
-                                    color: Color.fromRGBO(29, 185, 84, 1)),
-                                child: Center(
-                                    child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width /
-                                              15.07,
-                                      fontFamily: 'Yuanti'),
-                                )),
-                              ),
-                            ),
-                          ));
-                        }
-                        return Expanded(
-                          child: Container(
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              childAspectRatio: 2,
-                              crossAxisCount: 2,
-                              children: storeList,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Center(
-                          child: SpinKitThreeBounce(
-                            color: Colors.white,
-                          ),
-                        );
-                      }
-                    }
-                    return Container();
-                  },
-                )
-              ],
-            ),
+                                    color: Color.fromRGBO(29, 185, 84, 1),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.elliptical(10, 9)),
+                                          color:
+                                              Color.fromRGBO(29, 185, 84, 1)),
+                                      child: Center(
+                                          child: Text(
+                                        store,
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                13.06,
+                                            fontFamily: 'Yuanti'),
+                                      )),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.width /
+                                            39.2),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.elliptical(10, 9)),
+                                          color:
+                                              Color.fromRGBO(29, 185, 84, 1)),
+                                      child: Center(
+                                          child: Text(
+                                        store,
+                                        style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                15.07,
+                                            fontFamily: 'Yuanti'),
+                                      )),
+                                    ),
+                                  ),
+                                ));
+                              }
+                              return Expanded(
+                                child: Container(
+                                  child: GridView.count(
+                                    shrinkWrap: true,
+                                    childAspectRatio: 2,
+                                    crossAxisCount: 2,
+                                    children: storeList,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: SpinKitThreeBounce(
+                                  color: Colors.white,
+                                ),
+                              );
+                            }
+                          }
+                          return Container();
+                        },
+                      )
+                    ],
+                  );
+                }),
           ),
         ),
       ),

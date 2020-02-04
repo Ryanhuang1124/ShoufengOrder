@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cupertino_tabbar/cupertino_tabbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoufeng_order/tools/accounting_builder.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
+import 'package:shoufeng_order/tools/vote_builder.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -27,6 +29,33 @@ class _AccountContentState extends State<AccountContent> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Widget showPopupMenu() {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        setState(() {});
+        if (value == '返回上一頁') {
+          Navigator.pop(context);
+        }
+      },
+      itemBuilder: (context) {
+        return <PopupMenuItem<String>>[
+          PopupMenuItem<String>(
+            value: '刪除我的訂單',
+            child: Text('刪除我的訂單'),
+          ),
+          PopupMenuItem<String>(
+            value: '清空所有訂單',
+            child: Text('清空所有訂單'),
+          ),
+          PopupMenuItem<String>(
+            value: '返回上一頁',
+            child: Text('返回上一頁'),
+          ),
+        ];
+      },
+    );
   }
 
   @override
@@ -161,10 +190,11 @@ class _AccountContentState extends State<AccountContent> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
+                        flex: 6,
                         child: Row(
                           children: <Widget>[
                             Expanded(
+                              flex: 3,
                               child: Container(
                                   child: CupertinoTabBar(
                                 Color.fromRGBO(18, 18, 18, 1),
@@ -219,9 +249,7 @@ class _AccountContentState extends State<AccountContent> {
                                 },
                               )),
                             ),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
+                            Expanded(flex: 1, child: SizedBox()),
                             StreamBuilder<QuerySnapshot>(
                               stream:
                                   fireStore.collection('StoreList').snapshots(),
@@ -249,30 +277,41 @@ class _AccountContentState extends State<AccountContent> {
                                   }
 
                                   return Expanded(
+                                    flex: 3,
                                     child: Container(
-                                        child: Column(
-                                      children: <Widget>[
-                                        Text(
-                                          phoneNum,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'LilitaOne',
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  22),
-                                        ),
-                                        Text(
-                                          storeName,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'Yuanti',
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  18),
-                                        ),
-                                      ],
+                                        child: Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              phoneNum,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'LilitaOne',
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          22),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              storeName,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily: 'Yuanti',
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          18),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     )),
                                   );
                                 } else {
@@ -280,16 +319,206 @@ class _AccountContentState extends State<AccountContent> {
                                 }
                               },
                             ),
-                            Hero(
-                              tag: 'bottle_accounting',
+                            Expanded(
+                              flex: 2,
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  EasyDialog(
+                                      //d
+                                      cardColor: Color.fromRGBO(18, 18, 18, 1),
+                                      cornerRadius: 15.0,
+                                      fogOpacity: 0.1,
+                                      width: MediaQuery.of(context).size.width /
+                                          1.568,
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              4.25,
+                                      contentPadding: EdgeInsets.only(
+                                        top:
+                                            MediaQuery.of(context).size.height /
+                                                70.83,
+                                      ), // Needed for the button design
+                                      contentList: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15.0)),
+                                              Text(
+                                                "提醒",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: 'Yuanti',
+                                                    fontSize:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            23.05),
+                                                textScaleFactor: 1.3,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 15.0),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: SizedBox(),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            child: Text(
+                                              '要刪除你的訂單嗎？',
+                                              style: TextStyle(
+                                                  fontFamily: 'Yuanti',
+                                                  fontSize:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          17.81,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: SizedBox(),
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.greenAccent,
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                  child: FlatButton(
+                                                    child: Text(
+                                                      "Cancel",
+                                                      textScaleFactor: 1.6,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'LilitaOne',
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              24.5),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 1,
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.greenAccent,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomRight:
+                                                            Radius.circular(
+                                                                10.0),
+                                                      )),
+                                                  child: FlatButton(
+                                                    child: Text(
+                                                      "OK",
+                                                      textScaleFactor: 1.6,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'LilitaOne',
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              23.05),
+                                                    ),
+                                                    onPressed: () async {
+                                                      setState(() {});
+                                                      clearOrderCache(
+                                                          fireStore);
+                                                      BotToast.showCustomText(
+                                                        toastBuilder: (_) =>
+                                                            Align(
+                                                          alignment:
+                                                              Alignment(0, 0.8),
+                                                          child: Card(
+                                                            child: Padding(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          8),
+                                                              child: Text(
+                                                                '刪除完成！',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Yuanti',
+                                                                  fontSize: 24,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          18,
+                                                                          18,
+                                                                          18,
+                                                                          1),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        duration: Duration(
+                                                            seconds: 3),
+                                                        onlyOne: true,
+                                                        clickClose: true,
+                                                        ignoreContentClick:
+                                                            true,
+                                                      );
+
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ]).show(context);
                                 },
-                                child: Container(
-                                  child: Image.asset(
-                                    'images/message_in_a_bottle.png',
-                                    scale: 13,
+                                child: Icon(
+                                  Icons.delete_forever,
+                                  size: MediaQuery.of(context).size.width / 8,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Hero(
+                                tag: 'bottle_accounting',
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    child: Image.asset(
+                                      'images/message_in_a_bottle.png',
+                                      scale: 13,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -299,7 +528,7 @@ class _AccountContentState extends State<AccountContent> {
                       ), // TopRow
                       cupertinoTabBarValue == 0
                           ? Expanded(
-                              flex: 13,
+                              flex: 65,
                               child: Column(
                                 children: <Widget>[
                                   Expanded(
@@ -1054,11 +1283,279 @@ class _AccountContentState extends State<AccountContent> {
                                         MediaQuery.of(context).size.height / 15,
                                     child: Center(
                                         child: BouncingWidget(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        EasyDialog(
+                                            //d
+                                            cardColor:
+                                                Color.fromRGBO(18, 18, 18, 1),
+                                            cornerRadius: 15.0,
+                                            fogOpacity: 0.1,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                1.568,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                4.25,
+                                            contentPadding: EdgeInsets.only(
+                                              top: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  70.83,
+                                            ), // Needed for the button design
+                                            contentList: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 15.0)),
+                                                    Text(
+                                                      "提醒",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontFamily: 'Yuanti',
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              23.05),
+                                                      textScaleFactor: 1.3,
+                                                    ),
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 15.0),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  child: Text(
+                                                    '確定清空全部訂單',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Yuanti',
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            17.81,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  child: Text(
+                                                    '並重啟投票？',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Yuanti',
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            17.81,
+                                                        color: Colors.white),
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .greenAccent,
+                                                          borderRadius:
+                                                              BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    10.0),
+                                                          ),
+                                                        ),
+                                                        child: FlatButton(
+                                                          child: Text(
+                                                            "Cancel",
+                                                            textScaleFactor:
+                                                                1.6,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'LilitaOne',
+                                                                fontSize: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    24.5),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 1,
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color: Colors
+                                                                    .greenAccent,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .only(
+                                                                  bottomRight: Radius
+                                                                      .circular(
+                                                                          10.0),
+                                                                )),
+                                                        child: FlatButton(
+                                                          child: Text(
+                                                            "OK",
+                                                            textScaleFactor:
+                                                                1.6,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'LilitaOne',
+                                                                fontSize: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    23.05),
+                                                          ),
+                                                          onPressed: () async {
+                                                            setState(() {});
+                                                            SharedPreferences
+                                                                prefs =
+                                                                await SharedPreferences
+                                                                    .getInstance();
+                                                            String userName =
+                                                                prefs.getString(
+                                                                    'userName');
+                                                            if (userName !=
+                                                                null) {
+                                                              clearAllOrder(
+                                                                  fireStore,
+                                                                  userName);
+                                                              uploadVoteState(
+                                                                  fireStore,
+                                                                  false,
+                                                                  userName);
+                                                              BotToast
+                                                                  .showCustomText(
+                                                                toastBuilder:
+                                                                    (_) =>
+                                                                        Align(
+                                                                  alignment:
+                                                                      Alignment(
+                                                                          0,
+                                                                          0.8),
+                                                                  child: Card(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              8),
+                                                                      child:
+                                                                          Text(
+                                                                        '清除完成！',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'Yuanti',
+                                                                          fontSize:
+                                                                              24,
+                                                                          color: Color.fromRGBO(
+                                                                              18,
+                                                                              18,
+                                                                              18,
+                                                                              1),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                onlyOne: true,
+                                                                clickClose:
+                                                                    true,
+                                                                ignoreContentClick:
+                                                                    true,
+                                                              );
+                                                            } else {
+                                                              BotToast
+                                                                  .showCustomText(
+                                                                toastBuilder:
+                                                                    (_) =>
+                                                                        Align(
+                                                                  alignment:
+                                                                      Alignment(
+                                                                          0,
+                                                                          0.8),
+                                                                  child: Card(
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                          horizontal:
+                                                                              8),
+                                                                      child:
+                                                                          Text(
+                                                                        '清除失敗,本地記憶體錯誤..',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'Yuanti',
+                                                                          fontSize:
+                                                                              24,
+                                                                          color: Color.fromRGBO(
+                                                                              18,
+                                                                              18,
+                                                                              18,
+                                                                              1),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                onlyOne: true,
+                                                                clickClose:
+                                                                    true,
+                                                                ignoreContentClick:
+                                                                    true,
+                                                              );
+                                                            }
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ]).show(context);
+                                      },
                                       child: Container(
                                         child: Center(
                                           child: Text(
-                                            '結清本次訂餐',
+                                            '結清所有訂單',
                                             style: TextStyle(
                                               fontFamily: 'Yuanti',
                                               color:
@@ -1088,7 +1585,7 @@ class _AccountContentState extends State<AccountContent> {
                             )
                           : objListTemp.length != 0 //合單頁
                               ? Expanded(
-                                  flex: 14,
+                                  flex: 65,
                                   child: Column(
                                     children: <Widget>[
                                       Expanded(
@@ -1230,7 +1727,7 @@ class _AccountContentState extends State<AccountContent> {
                                     ],
                                   ),
                                 )
-                              : Container()
+                              : Expanded(flex: 65, child: Container())
 
                       //Staggered ListView
                     ], //BottomRow

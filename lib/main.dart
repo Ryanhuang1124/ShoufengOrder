@@ -39,6 +39,7 @@ class _ShoufengState extends State<Shoufeng> {
               navigatorObservers: [BotToastNavigatorObserver()],
               initialRoute: '/',
               routes: {
+                '/loggin': (context) => LoginPage(),
                 '/main': (context) => MainPage(),
                 '/vote': (context) => VoteContent(),
                 '/accounting': (context) => AccountContent(),

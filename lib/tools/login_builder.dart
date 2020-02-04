@@ -10,22 +10,6 @@ class UserData {
   }
 }
 
-Future<bool> getUserBottleSetting() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isToggle = false;
-  isToggle = prefs.getBool('isToggle');
-  if (isToggle != null) {
-    return isToggle;
-  } else {
-    return false;
-  }
-}
-
-void setUserBottleSetting(bool isLogin) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('isToggle', isLogin);
-}
-
 Future<bool> getUserIsLogin() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLogin = false;

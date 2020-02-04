@@ -2,6 +2,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animations/loading_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoufeng_order/tools/vote_builder.dart';
 import 'package:easy_dialog/easy_dialog.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
@@ -404,12 +405,18 @@ class _VoteContentState extends State<VoteContent> {
                                                                 'LilitaOne',
                                                             fontSize: 17),
                                                       ),
-                                                      onPressed: () {
+                                                      onPressed: () async {
+                                                        SharedPreferences pref =
+                                                            await SharedPreferences
+                                                                .getInstance();
+                                                        String userName =
+                                                            pref.getString(
+                                                                'userName');
                                                         setState(() {
                                                           uploadVoteState(
                                                               fireStore,
                                                               true,
-                                                              'Ryan');
+                                                              userName);
                                                           uploadVoteTime(
                                                               fireStore);
                                                           clearStoreSelect(

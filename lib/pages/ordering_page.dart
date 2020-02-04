@@ -1,10 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shoufeng_order/tools/member_builder.dart';
 import 'package:shoufeng_order/widgets/wave_widgets.dart';
 
 class OrderingPage extends StatefulWidget {
-  OrderingPage({Key key, this.isShowBottle});
-  final bool isShowBottle;
   @override
   _OrderingPageState createState() => _OrderingPageState();
 }
@@ -19,7 +18,6 @@ class _OrderingPageState extends State<OrderingPage>
   @override
   void initState() {
     super.initState();
-    bottle_visible = widget.isShowBottle;
 
     bottle_move = 0;
     wavemax = 200;
@@ -128,26 +126,34 @@ class _OrderingPageState extends State<OrderingPage>
                 SizedBox(
                   height: bottle_move,
                 ),
-                Hero(
-                  tag: 'bottle_order',
-                  child: Visibility(
-                    visible: bottle_visible,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/menulist',
-                        );
-                        print('bottle tap!');
-                      },
-                      child: Container(
-                        child: Image.asset(
-                          'images/message_in_a_bottle.png',
-                          scale: 5,
+                FutureBuilder<bool>(
+                  future: getBottleState(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data) {
+                        bottle_visible = true;
+                      }
+                    } else {
+                      bottle_visible = false;
+                    }
+                    return Hero(
+                      tag: 'bottle_vote',
+                      child: Visibility(
+                        visible: bottle_visible,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/menulist');
+                          },
+                          child: Container(
+                            child: Image.asset(
+                              'images/message_in_a_bottle.png',
+                              scale: 5,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),

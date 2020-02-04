@@ -83,7 +83,25 @@ void clearOrderCache(fireStore) async {
 
   if (userName != null) {
     fireStore.collection('Members').document(userName).delete();
+    fireStore.collection('FinalState').document(userName).delete();
   }
+}
+
+void clearAllOrder(fireStore, userName) async {
+  fireStore.collection('Members').getDocuments().then((snapshot) {
+    for (DocumentSnapshot ds in snapshot.documents) {
+      ds.reference.delete();
+    }
+  });
+  fireStore.collection('FinalState').getDocuments().then((snapshot) {
+    for (DocumentSnapshot ds in snapshot.documents) {
+      ds.reference.delete();
+    }
+  });
+  await fireStore
+      .collection('Deleter')
+      .document('deleter')
+      .setData({'deleter': userName}, merge: true);
 }
 
 void uploadDefaultOrderState(fireStore, List<MenuValue> list) async {

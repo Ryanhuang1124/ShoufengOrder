@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         Icons.lock_outline,
                       ),
                       suffixIcon: Icon(Icons.highlight),
-                      placeholder: "身份證字號",
+                      placeholder: "手機號碼",
                       fontFamily: 'Yuanti',
                       fontWeight: FontWeight.w200,
                       isShadow: true,

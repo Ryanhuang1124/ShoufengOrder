@@ -1,6 +1,11 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:shoufeng_order/widgets/glow_avatar.dart';
-import 'package:shoufeng_order/widgets/barchart.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoufeng_order/tools/member_builder.dart';
+import 'package:xlive_switch/xlive_switch.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class MemberPage extends StatefulWidget {
   @override
@@ -8,185 +13,318 @@ class MemberPage extends StatefulWidget {
 }
 
 class _MemberPageState extends State<MemberPage> {
+  Future<bool> _value;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void _changeValue(bool value) {
+    setState(() {});
+    setBottleState(value);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        Container(
-          //底層
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Color.fromRGBO(66, 147, 175, 1),
-                Color.fromRGBO(51, 8, 103, 1),
-              ],
-            ),
-          ),
-        ),
-        SafeArea(
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(18, 18, 18, 1),
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 40,
+                height: MediaQuery.of(context).size.height / 20,
               ),
-              Expanded(
-                child: Container(
-                  //夾層
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height / 13,
+                  child: TypewriterAnimatedTextKit(
+                    totalRepeatCount: 1,
+                    speed: Duration(milliseconds: 300),
+                    isRepeatingAnimation: true,
+                    text: ["How's your day?"],
+                    textStyle: TextStyle(
                         color: Colors.white,
-                        blurRadius: 5.0,
-                      ),
-                    ],
-                    color: Colors.white70,
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.elliptical(35, 25),
-                    ),
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      //上層
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 20,
-                            ),
-                            buildGlowAvatar(),
-                            Expanded(
-                              child: SizedBox(),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                print('menu pressed!');
-                              },
-                              color: Color.fromRGBO(49, 27, 146, 1),
-                              icon: Icon(Icons.assignment),
-                              iconSize: 40,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                print('setting pressed!');
-                              },
-                              color: Color.fromRGBO(49, 27, 146, 1),
-                              icon: Icon(Icons.settings),
-                              iconSize: 40,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              "How's your day  ,  ",
-                              style: TextStyle(
-                                fontFamily: 'LilitaOne',
-                                fontSize: 30,
-                                color: Color.fromRGBO(49, 27, 146, 1),
-                              ),
-                            ),
-                            Visibility(
-                              visible: true,
-                              child: GestureDetector(
-                                onTap: () {
-                                  print('name taped');
-                                },
-                                child: Container(
-                                  width: 130,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(0, 0, 81, 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8)),
-                                  ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Image.asset(
-                                        'images/firefighter_icon.png',
-                                        scale: 1.3,
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        '冠翔',
-                                        style: TextStyle(
-                                          fontFamily: 'Yuanti',
-                                          fontSize: 20,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 20,
-                            ),
-                            IconButton(
-                              iconSize: 35,
-                              icon: Icon(Icons.equalizer),
-                            ),
-                            Text(
-                              'Statistics',
-                              style: TextStyle(
-                                fontFamily: 'LilitaOne',
-                                fontSize: 30,
-                                color: Color.fromRGBO(49, 27, 146, 1),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Expanded(
+                        fontSize: MediaQuery.of(context).size.width / 8,
+                        fontFamily: 'LilitaOne'),
+                    textAlign: TextAlign.start,
+                  )),
+              Row(
+                children: <Widget>[
+                  FutureBuilder<String>(
+                    future: getUserName(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Expanded(
+                          flex: 1,
                           child: Container(
-                            child: BarChartSample1(),
+                            child: TextLiquidFill(
+                              boxWidth: MediaQuery.of(context).size.width / 2,
+                              boxHeight: MediaQuery.of(context).size.height / 4,
+                              text: snapshot.data,
+                              waveColor: Color.fromRGBO(29, 185, 54, 1),
+                              boxBackgroundColor: Color.fromRGBO(18, 18, 18, 1),
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Yuanti',
+                                fontSize: MediaQuery.of(context).size.width / 6,
+                              ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 40,
-                        )
-                      ],
-                    ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
                   ),
+                  Expanded(flex: 1, child: SizedBox()),
+                ],
+              ),
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: Image.asset(
+                          'images/message_in_a_bottle.png',
+                          scale: 12,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 20,
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        child: Text(
+                          '永遠顯示瓶中信',
+                          style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.width / 14,
+                              fontFamily: 'Yuanti',
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: FutureBuilder<bool>(
+                        future: getBottleState(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Container(
+                              child: XlivSwitch(
+                                value: snapshot.data,
+                                onChanged: _changeValue,
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              child: XlivSwitch(
+                                value: false,
+                                onChanged: _changeValue,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    )
+                  ],
                 ),
               ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 17,
+              ),
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        child: Image.asset(
+                          'images/document.png',
+                          scale: 12,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 20,
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        child: Text(
+                          '給冠翔開發建議',
+                          style: TextStyle(
+                              fontSize: MediaQuery.of(context).size.width / 14,
+                              fontFamily: 'Yuanti',
+                              color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 2, child: SizedBox()),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 17,
+              ),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    EasyDialog(
+                        cardColor: Color.fromRGBO(18, 18, 18, 1),
+                        cornerRadius: 15.0,
+                        fogOpacity: 0.1,
+                        width: MediaQuery.of(context).size.width / 1.568,
+                        height: MediaQuery.of(context).size.height / 4.25,
+                        contentPadding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height / 70.83,
+                        ), // Needed for the button design
+                        contentList: [
+                          Expanded(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.only(left: 15.0)),
+                                Text(
+                                  "提醒",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Yuanti',
+                                      fontSize:
+                                          MediaQuery.of(context).size.width /
+                                              23.05),
+                                  textScaleFactor: 1.3,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 15.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Text(
+                                '確定要登出嗎？',
+                                style: TextStyle(
+                                    fontFamily: 'Yuanti',
+                                    fontSize:
+                                        MediaQuery.of(context).size.width /
+                                            17.81,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.greenAccent,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: FlatButton(
+                                      child: Text(
+                                        "Cancel",
+                                        textScaleFactor: 1.6,
+                                        style: TextStyle(
+                                            fontFamily: 'LilitaOne',
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                24.5),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 1,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.greenAccent,
+                                        borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(10.0),
+                                        )),
+                                    child: FlatButton(
+                                      child: Text(
+                                        "OK",
+                                        textScaleFactor: 1.6,
+                                        style: TextStyle(
+                                            fontFamily: 'LilitaOne',
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                23.05),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {});
+
+                                        Navigator.pushReplacementNamed(
+                                            context, '/loggin');
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]).show(context);
+                  },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          child: Image.asset(
+                            'images/log_out.png',
+                            scale: 12,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 20,
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Container(
+                          child: Text(
+                            '登 出',
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.width / 14,
+                                fontFamily: 'Yuanti',
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      Expanded(flex: 2, child: SizedBox()),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
