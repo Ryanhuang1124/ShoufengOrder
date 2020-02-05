@@ -9,7 +9,9 @@ import 'package:shoufeng_order/tools/login_builder.dart';
 import 'package:shoufeng_order/pages/main_page.dart';
 import 'package:flutter/services.dart';
 
-void main() => runApp(Shoufeng());
+void main() => runApp(RestartWidget(
+      child: Shoufeng(),
+    ));
 
 class Shoufeng extends StatefulWidget {
   @override
@@ -33,7 +35,6 @@ class _ShoufengState extends State<Shoufeng> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           bool isLogin = snapshot.data;
-          print('fromLogin :$isLogin');
           return BotToastInit(
             child: MaterialApp(
               navigatorObservers: [BotToastNavigatorObserver()],
@@ -53,6 +54,37 @@ class _ShoufengState extends State<Shoufeng> {
           return Container();
         }
       },
+    );
+  }
+}
+
+class RestartWidget extends StatefulWidget {
+  RestartWidget({this.child});
+
+  final Widget child;
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>().restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: widget.child,
     );
   }
 }

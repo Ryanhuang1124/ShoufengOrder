@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<String> getUserName() async {
@@ -23,4 +24,20 @@ void setBottleState(bool state) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
 
   pref.setBool('bottleState', state);
+}
+
+void uploadDeveloperAdvices(String userName, String content) async {
+  DateTime now = DateTime.now();
+
+  String date = now.year.toString() +
+      '/' +
+      now.month.toString() +
+      '/' +
+      now.day.toString();
+
+  final fireStore = Firestore.instance;
+  await fireStore
+      .collection('Advices')
+      .document(userName)
+      .setData({date: content}, merge: true);
 }

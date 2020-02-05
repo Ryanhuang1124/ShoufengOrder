@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: MediaQuery.of(context).size.width / 1.25,
                       height: MediaQuery.of(context).size.height / 13,
                       duration: Duration(milliseconds: 600),
-                      inputType: TextInputType.text,
+                      inputType: TextInputType.number,
                       prefixIcon: Icon(
                         Icons.lock_outline,
                       ),
