@@ -1,8 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shoufeng_order/tools/login_builder.dart';
 import 'package:shoufeng_order/tools/member_builder.dart';
+import 'package:shoufeng_order/tools/vote_builder.dart';
 import 'package:xlive_switch/xlive_switch.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -85,11 +87,103 @@ class _MemberPageState extends State<MemberPage> {
                       }
                     },
                   ),
-                  Expanded(flex: 1, child: SizedBox()),
+                  Expanded(
+                    flex: 1,
+                    child: Transform.translate(
+                      offset: Offset(MediaQuery.of(context).size.width / 6,
+                          MediaQuery.of(context).size.height / 13),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 15,
+                        child: Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                BotToast.showCustomText(
+                                  toastBuilder: (_) => Align(
+                                    alignment: Alignment(0, 0.8),
+                                    child: Card(
+                                      child: Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 8),
+                                        child: Text(
+                                          '我把折價券都藏在那裡了..去找吧!',
+                                          style: TextStyle(
+                                            fontFamily: 'Yuanti',
+                                            fontSize: 24,
+                                            color:
+                                                Color.fromRGBO(18, 18, 18, 1),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  duration: Duration(seconds: 3),
+                                  onlyOne: true,
+                                  clickClose: true,
+                                  ignoreContentClick: true,
+                                );
+                              },
+                              child: Container(
+                                child: Image.asset(
+                                  'images/coupon.png',
+                                  scale: 0.8,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 50,
+                            ),
+                            Container(
+                                child: Icon(
+                              Icons.clear,
+                              color: Colors.white,
+                            )),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width / 50,
+                            ),
+                            StreamBuilder<QuerySnapshot>(
+                              stream: Firestore.instance
+                                  .collection('Coupons')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                int couponsCount = 0;
+                                if (snapshot.hasData) {
+                                  for (var doc in snapshot.data.documents) {
+                                    if (doc.documentID == userName) {
+                                      doc.data.forEach((k, v) {
+                                        if (k == 'coupons') {
+                                          couponsCount = v;
+                                        }
+                                      });
+                                    }
+                                  }
+                                }
+                                return Container(
+                                  child: Text(
+                                    couponsCount.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'LilitaOne',
+                                        color: Colors.white,
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                9),
+                                  ),
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Expanded(
                 child: ListView(children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 17,
+                  ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 15,

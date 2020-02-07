@@ -35,23 +35,47 @@ class IntegrateOrderObj {
   List<List<String>> note = [];
 }
 
-String stateBuilder(String inputPrice, double totalPrice) {
+String stateBuilder(String inputPrice, double totalPrice, String couponCount) {
+  int thisCouponCount;
+  if (couponCount == '請選擇' || couponCount == null) {
+    thisCouponCount = 0;
+  } else {
+    thisCouponCount = int.tryParse(couponCount);
+  }
+
   double thisInputPrice = 0;
-  thisInputPrice = double.parse(inputPrice);
-  if (thisInputPrice < totalPrice) {
+  thisInputPrice = double.tryParse(inputPrice);
+  if (thisInputPrice == null) {
+    thisInputPrice = 0;
+  }
+  if ((thisInputPrice + thisCouponCount * 5) < totalPrice) {
     return '-1';
   } else {
-    return (thisInputPrice - totalPrice) == 0 ? '結清' : '找錢';
+    return ((thisInputPrice + thisCouponCount * 5) - totalPrice) == 0
+        ? '結清'
+        : '找錢';
   }
 }
 
-String changesBuilder(String inputPrice, double totalPrice) {
+String changesBuilder(
+    String inputPrice, double totalPrice, String couponCount) {
+  int thisCouponCount;
+  if (couponCount == '請選擇' || couponCount == null) {
+    thisCouponCount = 0;
+  } else {
+    thisCouponCount = int.tryParse(couponCount);
+  }
   double thisInputPrice = 0;
-  thisInputPrice = double.parse(inputPrice);
-  if (thisInputPrice < totalPrice) {
+  thisInputPrice = double.tryParse(inputPrice);
+  if (thisInputPrice == null) {
+    thisInputPrice = 0;
+  }
+  if (thisInputPrice + thisCouponCount * 5 < totalPrice) {
     return '0';
   } else {
-    return (thisInputPrice - totalPrice).round().toString();
+    return (thisInputPrice + thisCouponCount * 5 - totalPrice)
+        .round()
+        .toString();
   }
 }
 
@@ -108,31 +132,13 @@ void uploadDefaultOrderState(fireStore, List<MenuValue> list) async {
   String userName;
   SharedPreferences pref = await SharedPreferences.getInstance();
   userName = pref.getString('userName');
-  await fireStore
-      .collection('FinalState')
-      .document(userName)
-      .setData({'changes': '0', 'state': '未付', 'paid': '0'}, merge: false);
-}
-
-void uploadOrderState(fireStore, String userName, String state, String changes,
-    String paid) async {
-  String thisChanges;
-
-  if (state == '結清') {
-    thisChanges = '0';
-  } else {
-    thisChanges = changes;
-  }
-
-  print(paid);
-
   await fireStore.collection('FinalState').document(userName).setData(
-      {'changes': thisChanges, 'state': state, 'paid': paid},
+      {'changes': '0', 'state': '未付', 'paid': '0', 'couponCount': '0'},
       merge: false);
 }
 
-void changeOrderState(
-    fireStore, String userName, String state, String changes) async {
+void uploadOrderState(fireStore, String userName, String state, String changes,
+    String paid, String couponCount) async {
   String thisChanges;
 
   if (state == '結清') {
@@ -144,7 +150,31 @@ void changeOrderState(
   await fireStore.collection('FinalState').document(userName).setData({
     'changes': thisChanges,
     'state': state,
-  }, merge: true);
+    'paid': paid,
+    'couponCount':
+        (couponCount == '請選擇' || couponCount == null) ? '0' : couponCount
+  }, merge: false);
+}
+
+void changeOrderState(
+    fireStore, String userName, String state, String changes) async {
+  String thisChanges;
+
+  if (state == '結清') {
+    thisChanges = '0';
+    await fireStore.collection('FinalState').document(userName).setData({
+      'changes': thisChanges,
+      'state': state,
+    }, merge: true);
+  } else {
+    thisChanges = changes;
+    await fireStore.collection('FinalState').document(userName).setData({
+      'changes': '0',
+      'state': state,
+      'couponCount': '0',
+      'paid': '0',
+    }, merge: true);
+  }
 }
 
 IntegrateOrderObj integrateBuilder(objListTemp) {
@@ -196,4 +226,25 @@ int sumOfTotalPriceCalculator(List<double> totalPriceList) {
     sum = sum + item;
   }
   return sum.round();
+}
+
+void consumeCoupon(String userName, String selected) async {
+  int thisSelected;
+  int count;
+  final doc =
+      await Firestore.instance.collection('Coupons').document(userName).get();
+  doc.data.forEach((k, v) {
+    if (k == 'coupons') {
+      count = v;
+    }
+  });
+  if (selected != null) {
+    thisSelected = int.tryParse(selected);
+  } else {
+    thisSelected = 0;
+  }
+  await Firestore.instance
+      .collection('Coupons')
+      .document(userName)
+      .setData({'coupons': count - thisSelected}, merge: true);
 }

@@ -1,5 +1,10 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shoufeng_order/tools/member_builder.dart';
+import 'package:shoufeng_order/tools/vote_builder.dart';
 import 'package:shoufeng_order/widgets/wave_widgets.dart';
 
 class VotePage extends StatefulWidget {
@@ -13,6 +18,9 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
   int wavemax, wavemin;
   double bottle_move, value = 0;
   bool bottle_visible = false;
+  bool moneyVisible = false;
+
+  final fireStore = Firestore.instance;
 
   @override
   void initState() {
@@ -158,6 +166,160 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
             ),
           ],
         ),
+        Visibility(
+          visible: moneyVisible,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.7,
+            child: Row(
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: bottle_move / 3,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        moneyVisible = false;
+                        addCouponsCount(fireStore);
+                        setState(() {});
+                        EasyDialog(
+                            cardColor: Color.fromRGBO(18, 18, 18, 1),
+                            cornerRadius: 15.0,
+                            fogOpacity: 0.1,
+                            width: MediaQuery.of(context).size.width / 1.568,
+                            height: MediaQuery.of(context).size.height / 4.25,
+                            contentPadding: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height / 70.83,
+                            ), // Needed for the button design
+                            contentList: [
+                              Expanded(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 15.0)),
+                                    Text(
+                                      "恭喜！",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Yuanti',
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              23.05),
+                                      textScaleFactor: 1.3,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15.0),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Text(
+                                    '獲得一張5元折價券',
+                                    style: TextStyle(
+                                        fontFamily: 'Yuanti',
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                17.81,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Text(
+                                    '請到資料欄中查看',
+                                    style: TextStyle(
+                                        fontFamily: 'Yuanti',
+                                        fontSize:
+                                            MediaQuery.of(context).size.width /
+                                                17.81,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.greenAccent,
+                                          borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10.0),
+                                          ),
+                                        ),
+                                        child: FlatButton(
+                                          child: Text(
+                                            "Cancel",
+                                            textScaleFactor: 1.6,
+                                            style: TextStyle(
+                                                fontFamily: 'LilitaOne',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    24.5),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 1,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.greenAccent,
+                                            borderRadius: BorderRadius.only(
+                                              bottomRight:
+                                                  Radius.circular(10.0),
+                                            )),
+                                        child: FlatButton(
+                                          child: Text(
+                                            "OK",
+                                            textScaleFactor: 1.6,
+                                            style: TextStyle(
+                                                fontFamily: 'LilitaOne',
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    23.05),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ]).show(context);
+                      },
+                      child: Container(
+                        child: Image.asset(
+                          'images/coupon.png',
+                          scale: 0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(child: SizedBox()),
+              ],
+            ),
+          ),
+        ),
         GestureDetector(
           //波浪animation
           onTap: () {},
@@ -168,6 +330,8 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
             drag_controller.forward();
             drag_controller.addStatusListener((status) {
               if (status == AnimationStatus.completed) {
+                int _rng = Random().nextInt(200);
+                _rng == 82 ? moneyVisible = true : moneyVisible = false;
                 bottle_visible = true;
                 drag_controller.reverse();
               }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VoteStore {
   VoteStore(storeName) {
@@ -88,4 +89,35 @@ void uploadVoteTime(fireStore) {
     'hour': now.hour.toString(),
     'min': (now.minute < 10) ? '0${now.minute}' : now.minute.toString(),
   }, merge: false);
+}
+
+void addCouponsCount(fireStore) async {
+  int count = 0;
+  String userName;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  userName = pref.get('userName');
+
+  var doc = await fireStore.collection('Coupons').document(userName).get();
+
+  if (doc.data != null) {
+    doc.data.forEach((k, v) {
+      if (k == 'coupons') {
+        count = v;
+      }
+    });
+  }
+  count++;
+
+  await fireStore
+      .collection('Coupons')
+      .document(userName)
+      .setData({'coupons': count}, merge: false);
+}
+
+Future<int> getCouponsCount() async {
+  int count;
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  count = prefs.getInt('Coupons');
+
+  return count;
 }

@@ -8,6 +8,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:cupertino_tabbar/cupertino_tabbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoufeng_order/tools/accounting_builder.dart';
+import 'package:shoufeng_order/tools/member_builder.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
 import 'package:shoufeng_order/tools/vote_builder.dart';
 
@@ -24,11 +25,15 @@ class _AccountContentState extends State<AccountContent> {
     return cupertinoTabBarValue;
   }
 
+  Future<String> userName;
+
   String _selectType;
+  String _couponCount;
 
   @override
   void initState() {
     super.initState();
+    userName = getUserName();
   }
 
   Widget showPopupMenu() {
@@ -165,9 +170,10 @@ class _AccountContentState extends State<AccountContent> {
                   double temp = 0;
                   for (int j = 0; j < objListTemp[i].notePrice.length; j++) {
                     temp = temp +
-                        (isNumeric(objListTemp[i].notePrice[j])
-                            ? double.parse(objListTemp[i].notePrice[j])
-                            : double.parse(objListTemp[i].value[j]));
+                        double.parse(objListTemp[i].count[j]) *
+                            (isNumeric(objListTemp[i].notePrice[j])
+                                ? double.parse(objListTemp[i].notePrice[j])
+                                : double.parse(objListTemp[i].value[j]));
                   }
                   totalPriceList.add(temp);
                 }
@@ -552,7 +558,7 @@ class _AccountContentState extends State<AccountContent> {
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height /
-                                                    4.25,
+                                                    3,
                                                 contentPadding: EdgeInsets.only(
                                                   top: MediaQuery.of(context)
                                                           .size
@@ -672,6 +678,276 @@ class _AccountContentState extends State<AccountContent> {
                                                               ),
                                                             ),
                                                             Expanded(
+                                                              flex: 1,
+                                                              child:
+                                                                  FutureBuilder<
+                                                                      String>(
+                                                                future:
+                                                                    userName,
+                                                                builder: (context,
+                                                                    snapshot) {
+                                                                  String
+                                                                      userName =
+                                                                      '';
+                                                                  if (snapshot
+                                                                      .hasData) {
+                                                                    userName =
+                                                                        snapshot
+                                                                            .data;
+                                                                  }
+                                                                  return Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Padding(
+                                                                          padding:
+                                                                              EdgeInsets.only(left: MediaQuery.of(context).size.width / 30)),
+                                                                      Text(
+                                                                        "折價券",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontFamily:
+                                                                                'Yuanti',
+                                                                            fontSize:
+                                                                                MediaQuery.of(context).size.width / 23.05),
+                                                                        textScaleFactor:
+                                                                            1.3,
+                                                                      ),
+                                                                      Expanded(
+                                                                          child:
+                                                                              SizedBox()),
+                                                                      Text(
+                                                                        '剩餘: ',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'LilitaOne',
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontSize: MediaQuery.of(context).size.width / 23.05),
+                                                                      ),
+                                                                      StreamBuilder<
+                                                                          QuerySnapshot>(
+                                                                        stream: Firestore
+                                                                            .instance
+                                                                            .collection('Coupons')
+                                                                            .snapshots(),
+                                                                        builder:
+                                                                            (context,
+                                                                                snapshot) {
+                                                                          int couponsCount =
+                                                                              0;
+                                                                          if (snapshot
+                                                                              .hasData) {
+                                                                            for (var doc
+                                                                                in snapshot.data.documents) {
+                                                                              if (doc.documentID == userName) {
+                                                                                doc.data.forEach((k, v) {
+                                                                                  if (k == 'coupons') {
+                                                                                    couponsCount = v;
+                                                                                  }
+                                                                                });
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                          return Container(
+                                                                            child:
+                                                                                Text(
+                                                                              couponsCount.toString(),
+                                                                              style: TextStyle(fontFamily: 'LilitaOne', color: Colors.white, fontSize: MediaQuery.of(context).size.width / 22),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width /
+                                                                            20,
+                                                                      )
+                                                                    ],
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child:
+                                                                  FutureBuilder(
+                                                                future:
+                                                                    userName,
+                                                                builder: (context,
+                                                                    snapshot) {
+                                                                  String
+                                                                      userName =
+                                                                      '';
+                                                                  if (snapshot
+                                                                      .hasData) {
+                                                                    userName =
+                                                                        snapshot
+                                                                            .data;
+                                                                  }
+                                                                  return Row(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width /
+                                                                            20,
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width: MediaQuery.of(context).size.width /
+                                                                            20,
+                                                                      ),
+                                                                      Container(
+                                                                          padding: EdgeInsets.only(
+                                                                              left: MediaQuery.of(context).size.width /
+                                                                                  20),
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.greenAccent,
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(10)),
+                                                                          ),
+                                                                          child: StreamBuilder<QuerySnapshot>(
+                                                                              stream: Firestore.instance.collection('Coupons').snapshots(),
+                                                                              builder: (context, snapshot) {
+                                                                                int couponsCount = 0;
+                                                                                if (snapshot.hasData) {
+                                                                                  for (var doc in snapshot.data.documents) {
+                                                                                    if (doc.documentID == userName) {
+                                                                                      doc.data.forEach((k, v) {
+                                                                                        if (k == 'coupons') {
+                                                                                          couponsCount = v;
+                                                                                        }
+                                                                                      });
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                                return DropdownButtonHideUnderline(
+                                                                                    child: DropdownButton(
+                                                                                  items: <DropdownMenuItem>[
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '請選擇',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '請選擇',
+                                                                                    ),
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '1',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '1',
+                                                                                    ),
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '2',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '2',
+                                                                                    ),
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '3',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '3',
+                                                                                    ),
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '4',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '4',
+                                                                                    ),
+                                                                                    DropdownMenuItem(
+                                                                                      child: Center(
+                                                                                        child: Text(
+                                                                                          '5',
+                                                                                          style: TextStyle(fontFamily: 'Yuanti', fontSize: 22, color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                        ),
+                                                                                      ),
+                                                                                      value: '5',
+                                                                                    ),
+                                                                                  ],
+                                                                                  hint: Text(
+                                                                                    '請選擇',
+                                                                                    style: TextStyle(color: Color.fromRGBO(18, 18, 18, 1)),
+                                                                                  ),
+                                                                                  onChanged: (value) {
+                                                                                    int temp = 0;
+                                                                                    if (value != '請選擇') {
+                                                                                      temp = int.tryParse(value);
+                                                                                    }
+
+                                                                                    if (temp <= couponsCount) {
+                                                                                      _couponCount = value;
+                                                                                    } else {
+                                                                                      BotToast.showCustomText(
+                                                                                        toastBuilder: (_) => Align(
+                                                                                          alignment: Alignment(0, 0.8),
+                                                                                          child: Card(
+                                                                                            child: Padding(
+                                                                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                                                                              child: Text(
+                                                                                                '折價券不夠了！',
+                                                                                                style: TextStyle(
+                                                                                                  fontFamily: 'Yuanti',
+                                                                                                  fontSize: 24,
+                                                                                                  color: Color.fromRGBO(18, 18, 18, 1),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        duration: Duration(seconds: 3),
+                                                                                        onlyOne: true,
+                                                                                        clickClose: true,
+                                                                                        ignoreContentClick: true,
+                                                                                      );
+                                                                                      _couponCount = '請選擇';
+                                                                                    }
+                                                                                    setState(() {});
+                                                                                  },
+                                                                                  value: _couponCount,
+                                                                                  elevation: 24,
+                                                                                  style: new TextStyle(
+                                                                                    fontFamily: 'Yuanti',
+                                                                                    color: Colors.white,
+                                                                                    fontSize: 22,
+                                                                                  ),
+                                                                                  icon: Icon(Icons.arrow_drop_down),
+                                                                                  iconSize: MediaQuery.of(context).size.height / 20,
+                                                                                  iconEnabledColor: Color.fromRGBO(18, 18, 18, 1),
+                                                                                ));
+                                                                              })),
+                                                                    ],
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height /
+                                                                  100,
+                                                            ),
+                                                            Expanded(
                                                               child: Row(
                                                                 children: <
                                                                     Widget>[
@@ -711,96 +987,99 @@ class _AccountContentState extends State<AccountContent> {
                                                                     width: 1,
                                                                   ),
                                                                   Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      decoration: BoxDecoration(
-                                                                          color: Colors.greenAccent,
-                                                                          borderRadius: BorderRadius.only(
-                                                                            bottomRight:
-                                                                                Radius.circular(10.0),
-                                                                          )),
-                                                                      child:
-                                                                          FlatButton(
-                                                                        child:
-                                                                            Text(
-                                                                          "OK",
-                                                                          textScaleFactor:
-                                                                              1.6,
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'LilitaOne',
-                                                                              fontSize: MediaQuery.of(context).size.width / 23.05),
-                                                                        ),
-                                                                        onPressed:
-                                                                            () {
+                                                                    child: FutureBuilder<
+                                                                            String>(
+                                                                        future:
+                                                                            userName,
+                                                                        builder:
+                                                                            (context,
+                                                                                snapshot) {
                                                                           String
-                                                                              tempState;
-                                                                          tempState = stateBuilder(
-                                                                              changeController.text,
-                                                                              totalPriceList[index]);
-                                                                          setState(
-                                                                              () {});
-                                                                          if (tempState !=
-                                                                              '-1') {
-                                                                            uploadOrderState(
-                                                                                fireStore,
-                                                                                objListTemp[index].userName,
-                                                                                tempState,
-                                                                                changesBuilder(changeController.text, totalPriceList[index]),
-                                                                                changeController.text);
-                                                                            BotToast.showCustomText(
-                                                                              toastBuilder: (_) => Align(
-                                                                                alignment: Alignment(0, 0.8),
-                                                                                child: Card(
-                                                                                  child: Padding(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                                                                    child: Text(
-                                                                                      '付款成功',
-                                                                                      style: TextStyle(
-                                                                                        fontFamily: 'Yuanti',
-                                                                                        fontSize: 24,
-                                                                                        color: Color.fromRGBO(18, 18, 18, 1),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              duration: Duration(seconds: 3),
-                                                                              onlyOne: true,
-                                                                              clickClose: true,
-                                                                              ignoreContentClick: true,
-                                                                            );
-                                                                            changeController.clear();
-                                                                          } else {
-                                                                            BotToast.showCustomText(
-                                                                              toastBuilder: (_) => Align(
-                                                                                alignment: Alignment(0, 0.8),
-                                                                                child: Card(
-                                                                                  child: Padding(
-                                                                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                                                                    child: Text(
-                                                                                      '不能負債啦..',
-                                                                                      style: TextStyle(
-                                                                                        fontFamily: 'Yuanti',
-                                                                                        fontSize: 24,
-                                                                                        color: Color.fromRGBO(18, 18, 18, 1),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              duration: Duration(seconds: 3),
-                                                                              onlyOne: true,
-                                                                              clickClose: true,
-                                                                              ignoreContentClick: true,
-                                                                            );
-                                                                            changeController.clear();
+                                                                              userName =
+                                                                              '';
+                                                                          if (snapshot
+                                                                              .hasData) {
+                                                                            userName =
+                                                                                snapshot.data;
                                                                           }
+                                                                          return Container(
+                                                                            decoration: BoxDecoration(
+                                                                                color: Colors.greenAccent,
+                                                                                borderRadius: BorderRadius.only(
+                                                                                  bottomRight: Radius.circular(10.0),
+                                                                                )),
+                                                                            child:
+                                                                                FlatButton(
+                                                                              child: Text(
+                                                                                "OK",
+                                                                                textScaleFactor: 1.6,
+                                                                                style: TextStyle(fontFamily: 'LilitaOne', fontSize: MediaQuery.of(context).size.width / 23.05),
+                                                                              ),
+                                                                              onPressed: () {
+                                                                                String tempState;
+                                                                                tempState = stateBuilder(changeController.text, totalPriceList[index], _couponCount);
+                                                                                setState(() {});
+                                                                                if (tempState != '-1') {
+                                                                                  uploadOrderState(fireStore, objListTemp[index].userName, tempState, changesBuilder(changeController.text, totalPriceList[index], _couponCount), changeController.text, _couponCount);
+                                                                                  if (_couponCount != '請選擇') {
+                                                                                    consumeCoupon(userName, _couponCount);
+                                                                                  }
 
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                      ),
-                                                                    ),
+                                                                                  BotToast.showCustomText(
+                                                                                    toastBuilder: (_) => Align(
+                                                                                      alignment: Alignment(0, 0.8),
+                                                                                      child: Card(
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.symmetric(horizontal: 8),
+                                                                                          child: Text(
+                                                                                            '付款成功',
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'Yuanti',
+                                                                                              fontSize: 24,
+                                                                                              color: Color.fromRGBO(18, 18, 18, 1),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    duration: Duration(seconds: 3),
+                                                                                    onlyOne: true,
+                                                                                    clickClose: true,
+                                                                                    ignoreContentClick: true,
+                                                                                  );
+                                                                                  changeController.clear();
+                                                                                  _couponCount = '請選擇';
+                                                                                } else {
+                                                                                  BotToast.showCustomText(
+                                                                                    toastBuilder: (_) => Align(
+                                                                                      alignment: Alignment(0, 0.8),
+                                                                                      child: Card(
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.symmetric(horizontal: 8),
+                                                                                          child: Text(
+                                                                                            '不能負債啦..',
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'Yuanti',
+                                                                                              fontSize: 24,
+                                                                                              color: Color.fromRGBO(18, 18, 18, 1),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    duration: Duration(seconds: 3),
+                                                                                    onlyOne: true,
+                                                                                    clickClose: true,
+                                                                                    ignoreContentClick: true,
+                                                                                  );
+                                                                                  changeController.clear();
+                                                                                }
+
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                            ),
+                                                                          );
+                                                                        }),
                                                                   ),
                                                                 ],
                                                               ),
@@ -845,6 +1124,72 @@ class _AccountContentState extends State<AccountContent> {
                                                       ),
                                                       Expanded(
                                                           child: SizedBox()),
+                                                      StreamBuilder<
+                                                              QuerySnapshot>(
+                                                          stream: Firestore
+                                                              .instance
+                                                              .collection(
+                                                                  'FinalState')
+                                                              .snapshots(),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            String couponCount =
+                                                                '';
+                                                            if (snapshot
+                                                                .hasData) {
+                                                              for (var doc
+                                                                  in snapshot
+                                                                      .data
+                                                                      .documents) {
+                                                                if (doc.documentID ==
+                                                                    objListTemp[
+                                                                            index]
+                                                                        .userName) {
+                                                                  doc.data
+                                                                      .forEach(
+                                                                          (k, v) {
+                                                                    if (k ==
+                                                                        'couponCount') {
+                                                                      couponCount =
+                                                                          v;
+                                                                    }
+                                                                  });
+                                                                }
+                                                              }
+                                                            }
+                                                            return Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                    child: Text(
+                                                                  '$couponCount*',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'LilitaOne',
+                                                                    fontSize: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width /
+                                                                        20,
+                                                                  ),
+                                                                )),
+                                                                Container(
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'images/coupon.png',
+                                                                    scale: 1,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          }),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            50,
+                                                      )
                                                     ],
                                                   ),
                                                 ),
@@ -886,7 +1231,10 @@ class _AccountContentState extends State<AccountContent> {
                                                         flex: 2,
                                                         child: Center(
                                                           child: Text(
-                                                            '${totalPriceList[index].round()}',
+                                                            totalPriceList[
+                                                                    index]
+                                                                .round()
+                                                                .toString(),
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'LilitaOne',

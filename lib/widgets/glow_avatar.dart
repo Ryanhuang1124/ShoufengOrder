@@ -1,23 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 
-Widget buildGlowAvatar() {
-  return AvatarGlow(
-    glowColor: Colors.red,
-    duration: Duration(milliseconds: 1500),
-    endRadius: 70.0,
-    child: Material(
-      elevation: 10.0,
-      shape: CircleBorder(),
-      child: CircleAvatar(
-        backgroundColor: Colors.yellow,
-        child: Image.asset('images/account_icon.png'),
-        radius: 40,
-      ),
-    ),
-  );
-}
-
 Widget buttonGlowAvatar(context) {
   return AvatarGlow(
     glowColor: Color.fromRGBO(27, 180, 82, 1),
