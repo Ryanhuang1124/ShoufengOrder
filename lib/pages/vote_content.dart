@@ -59,7 +59,6 @@ class _VoteContentState extends State<VoteContent> {
                     setState(() {
                       uploadVoteStore(fireStore, data);
                     });
-                    print('$data:accept');
                     Navigator.pop(context);
                   },
                   builder: (context, a, b) {

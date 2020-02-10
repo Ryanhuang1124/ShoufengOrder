@@ -3,7 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class MenuValue {
   String docID;
   String keys;
-  int value;
+  String value;
   int count = 0;
   bool isShow = false;
   String note = '';
@@ -28,11 +28,12 @@ Future<List<MenuValue>> getMenu(fireStore) async {
 //  fetch storeName
 
   final menu = await fireStore.collection(imanomise).getDocuments();
-  //menu is one of document (漢堡 飲料etc)
+  //menu is one of documents (漢堡 飲料etc)
   for (var menu in menu.documents) {
     //menu.data return a Map which include all of items(key : value)
     menu.data.forEach((k, v) {
-      menuList.add(new MenuValue(menu.documentID, k, v));
+      String vs = v.toString();
+      menuList.add(new MenuValue(menu.documentID, k, vs));
     });
   }
   return menuList;

@@ -98,9 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       onChanged: (text) {
                         inputID = text;
                       },
-                      onSubmitted: (data) {
-                        print(data.length);
-                      },
+                      onSubmitted: (data) {},
                       onClickSuffix: () {},
                     ),
                     SizedBox(

@@ -20,10 +20,26 @@ Future<bool> getBottleState() async {
   return bottleState;
 }
 
+Future<bool> getWaveState() async {
+  bool waveState = false;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+
+  waveState =
+      pref.getBool('waveState') != null ? pref.getBool('waveState') : true;
+
+  return waveState;
+}
+
 void setBottleState(bool state) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
 
   pref.setBool('bottleState', state);
+}
+
+void setWaveState(bool state) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+
+  pref.setBool('waveState', state);
 }
 
 void uploadDeveloperAdvices(String userName, String content) async {

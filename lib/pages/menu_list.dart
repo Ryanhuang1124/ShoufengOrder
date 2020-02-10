@@ -654,7 +654,6 @@ class _MenuListState extends State<MenuList> {
                                             ),
                                             onPressed: () {
                                               setState(() {
-                                                print(storeName);
                                                 pref.remove(storeName);
                                                 Navigator.popUntil(
                                                   context,
@@ -2043,7 +2042,7 @@ class _MenuListState extends State<MenuList> {
                                                       hintStyle: TextStyle(
                                                           color: Colors.grey),
                                                       hintText:
-                                                          '輸入調整"後"的價錢(ex: 20)',
+                                                          '輸入調整"後"的價錢(不變則不填)',
                                                       border: InputBorder.none,
                                                     ),
                                                   ),
@@ -2083,8 +2082,7 @@ class _MenuListState extends State<MenuList> {
                                                                         .text)
                                                                 ? priceController
                                                                     .text
-                                                                : item.value
-                                                                    .toString();
+                                                                : item.value;
                                                             temp.note =
                                                                 noteController
                                                                     .text;
@@ -2524,7 +2522,7 @@ class _MenuListState extends State<MenuList> {
                                                         hintStyle: TextStyle(
                                                             color: Colors.grey),
                                                         hintText:
-                                                            '輸入調整"後"的價錢(ex: 20)',
+                                                            '輸入調整"後"的價錢(不變則不填)',
                                                         border:
                                                             InputBorder.none,
                                                       ),
@@ -2562,8 +2560,7 @@ class _MenuListState extends State<MenuList> {
                                                                           .text)
                                                                   ? priceController
                                                                       .text
-                                                                  : item.value
-                                                                      .toString();
+                                                                  : item.value;
                                                               temp.note =
                                                                   noteController
                                                                       .text;
@@ -2781,7 +2778,7 @@ class _MenuListState extends State<MenuList> {
                         (item.count *
                             (isNumeric(item.notePrice)
                                 ? double.parse(item.notePrice)
-                                : item.value));
+                                : double.parse(item.value)));
                   }
                 }
                 return Container(
@@ -2790,7 +2787,7 @@ class _MenuListState extends State<MenuList> {
                   color: Color.fromRGBO(18, 18, 18, 1),
                   child: Center(
                     child: Text(
-                      '共 $allCount 品項 , ${allPrice.round()} 元',
+                      '共 $allCount 品項 , ${allPrice.floor()} 元',
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Yuanti',

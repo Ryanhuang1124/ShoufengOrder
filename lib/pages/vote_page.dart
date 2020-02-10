@@ -18,6 +18,7 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
   int wavemax, wavemin;
   double bottle_move, value = 0;
   bool bottle_visible = false;
+  bool wave_Visible = true;
   bool moneyVisible = false;
 
   final fireStore = Firestore.instance;
@@ -320,33 +321,47 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
             ),
           ),
         ),
-        GestureDetector(
-          //波浪animation
-          onTap: () {},
-          onHorizontalDragEnd: (DragEndDetails details) {},
-          onVerticalDragEnd: (DragEndDetails detail) {
-            wavemin = 200;
-            wavemax = 600;
-            drag_controller.forward();
-            drag_controller.addStatusListener((status) {
-              if (status == AnimationStatus.completed) {
-                int _rng = Random().nextInt(200);
-                _rng == 82 ? moneyVisible = true : moneyVisible = false;
-                bottle_visible = true;
-                drag_controller.reverse();
+        FutureBuilder<bool>(
+            future: getWaveState(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data) {
+                  wave_Visible = true;
+                }
+              } else {
+                wave_Visible = false;
               }
-            });
-            drag_controller.addListener(
-              () {
-                setState(() {});
-                value = drag_controller.value;
-              },
-            );
-          },
-          child: Container(
-            child: buildWave(value, wavemin, wavemax),
-          ),
-        ),
+              return Visibility(
+                visible: wave_Visible,
+                child: GestureDetector(
+                  //波浪animation
+                  onTap: () {},
+                  onHorizontalDragEnd: (DragEndDetails details) {},
+                  onVerticalDragEnd: (DragEndDetails detail) {
+                    wavemin = 200;
+                    wavemax = 600;
+                    drag_controller.forward();
+                    drag_controller.addStatusListener((status) {
+                      if (status == AnimationStatus.completed) {
+                        int _rng = Random().nextInt(200);
+                        _rng == 82 ? moneyVisible = true : moneyVisible = false;
+                        bottle_visible = true;
+                        drag_controller.reverse();
+                      }
+                    });
+                    drag_controller.addListener(
+                      () {
+                        setState(() {});
+                        value = drag_controller.value;
+                      },
+                    );
+                  },
+                  child: Container(
+                    child: buildWave(value, wavemin, wavemax),
+                  ),
+                ),
+              );
+            }),
       ],
     );
   }

@@ -2,7 +2,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
 
 void prefFavList(MenuValue obj, String storeName) async {
-  print('pref Called');
   SharedPreferences pref = await SharedPreferences.getInstance();
   if (pref.getStringList(storeName) == null) {
     List<String> temp = List<String>();

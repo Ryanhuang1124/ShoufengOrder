@@ -73,7 +73,7 @@ String changesBuilder(
   if (thisInputPrice + thisCouponCount * 5 < totalPrice) {
     return '0';
   } else {
-    return (thisInputPrice + thisCouponCount * 5 - totalPrice)
+    return (thisInputPrice + thisCouponCount * 5 - totalPrice.floor())
         .round()
         .toString();
   }
@@ -225,7 +225,7 @@ int sumOfTotalPriceCalculator(List<double> totalPriceList) {
   for (var item in totalPriceList) {
     sum = sum + item;
   }
-  return sum.round();
+  return sum.floor();
 }
 
 void consumeCoupon(String userName, String selected) async {

@@ -36,7 +36,6 @@ void clearStoreSelect(fireStore) {
 }
 
 void clearVoteStore(fireStore) {
-  print('clear VoteStore Called');
   fireStore.collection('Vote').document('VoteStore').delete();
 }
 

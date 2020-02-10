@@ -31,6 +31,11 @@ class _MemberPageState extends State<MemberPage> {
     setBottleState(value);
   }
 
+  void _changeWave(bool value) {
+    setState(() {});
+    setWaveState(value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,20 +49,13 @@ class _MemberPageState extends State<MemberPage> {
               SizedBox(
                 height: MediaQuery.of(context).size.height / 20,
               ),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 13,
-                  child: TypewriterAnimatedTextKit(
-                    totalRepeatCount: 1,
-                    speed: Duration(milliseconds: 300),
-                    isRepeatingAnimation: true,
-                    text: ["How's your day?"],
-                    textStyle: TextStyle(
-                        color: Colors.white,
-                        fontSize: MediaQuery.of(context).size.width / 8,
-                        fontFamily: 'LilitaOne'),
-                    textAlign: TextAlign.start,
-                  )),
+              Text(
+                'Settings',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'LilitaOne',
+                    fontSize: MediaQuery.of(context).size.width / 7),
+              ),
               Row(
                 children: <Widget>[
                   FutureBuilder<String>(
@@ -182,7 +180,7 @@ class _MemberPageState extends State<MemberPage> {
               Expanded(
                 child: ListView(children: <Widget>[
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 17,
+                    height: MediaQuery.of(context).size.height / 25,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -244,7 +242,69 @@ class _MemberPageState extends State<MemberPage> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 17,
+                    height: MediaQuery.of(context).size.height / 25,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 15,
+                    child: Center(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              child: Image.asset(
+                                'images/wave.png',
+                                scale: 12,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 20,
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Container(
+                              child: Text(
+                                '顯示波浪動畫',
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width / 14,
+                                    fontFamily: 'Yuanti',
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: FutureBuilder<bool>(
+                              future: getWaveState(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Container(
+                                    child: XlivSwitch(
+                                      value: snapshot.data,
+                                      onChanged: _changeWave,
+                                    ),
+                                  );
+                                } else {
+                                  return Container(
+                                    child: XlivSwitch(
+                                      value: true,
+                                      onChanged: _changeWave,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height / 25,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -522,7 +582,7 @@ class _MemberPageState extends State<MemberPage> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height / 17,
+                    height: MediaQuery.of(context).size.height / 25,
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,

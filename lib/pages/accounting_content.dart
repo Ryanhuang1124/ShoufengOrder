@@ -381,7 +381,7 @@ class _AccountContentState extends State<AccountContent> {
                                         Expanded(
                                           child: Container(
                                             child: Text(
-                                              '要刪除你的訂單嗎？',
+                                              '要刪除自己的訂單嗎？',
                                               style: TextStyle(
                                                   fontFamily: 'Yuanti',
                                                   fontSize:
@@ -1233,7 +1233,7 @@ class _AccountContentState extends State<AccountContent> {
                                                           child: Text(
                                                             totalPriceList[
                                                                     index]
-                                                                .round()
+                                                                .floor()
                                                                 .toString(),
                                                             style: TextStyle(
                                                                 fontFamily:
