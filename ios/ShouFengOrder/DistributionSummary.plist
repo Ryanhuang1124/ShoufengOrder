@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Runner.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>bitcode</key>
+			<false/>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>5DE2C64D7DC82321A795BFE9FAC07529515A8816</string>
+				<key>dateExpires</key>
+				<string>2021/2/10</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+						<string>arm64</string>
+					</array>
+					<key>bitcode</key>
+					<false/>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>5DE2C64D7DC82321A795BFE9FAC07529515A8816</string>
+						<key>dateExpires</key>
+						<string>2021/2/10</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>App.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>34HQQAU5A2</string>
+						<key>name</key>
+						<string>KuanHsiang Huang</string>
+					</dict>
+				</dict>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>armv7</string>
+						<string>arm64</string>
+					</array>
+					<key>bitcode</key>
+					<false/>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>5DE2C64D7DC82321A795BFE9FAC07529515A8816</string>
+						<key>dateExpires</key>
+						<string>2021/2/10</string>
+						<key>type</key>
+						<string>Apple Distribution</string>
+					</dict>
+					<key>name</key>
+					<string>Flutter.framework</string>
+					<key>symbols</key>
+					<true/>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>34HQQAU5A2</string>
+						<key>name</key>
+						<string>KuanHsiang Huang</string>
+					</dict>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>34HQQAU5A2.com.ryan.shoufengOrder</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>34HQQAU5A2</string>
+				<key>get-task-allow</key>
+				<false/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>34HQQAU5A2.com.ryan.shoufengOrder</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>壽豐訂餐.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>c2429ce9-b3b8-4065-b86d-46b95e9aec96</string>
+				<key>name</key>
+				<string>iOS Team Store Provisioning Profile: com.ryan.shoufengOrder</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>34HQQAU5A2</string>
+				<key>name</key>
+				<string>KuanHsiang Huang</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
