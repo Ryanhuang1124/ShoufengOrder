@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +7,15 @@ class VoteStore {
   }
   String storeName = '';
   int count = 0;
+}
+
+class VoteSelected {
+  VoteSelected(String userName, String storeName) {
+    this.userName = userName;
+    this.storeName = storeName;
+  }
+  String userName;
+  String storeName;
 }
 
 void uploadVoteStore(fireStore, String storeName) {
@@ -31,12 +39,30 @@ void uploadStoreSelect(fireStore, String userName, String storeName) {
       .setData({userName: storeName}, merge: true);
 }
 
+void cancelStoreSelect(fireStore, String userName) {
+  if (userName != null) {
+    fireStore
+        .collection('Vote')
+        .document('storeSelect')
+        .updateData({userName: FieldValue.delete()});
+  }
+}
+
 void clearStoreSelect(fireStore) {
   fireStore.collection('Vote').document('storeSelect').delete();
 }
 
 void clearVoteStore(fireStore) {
   fireStore.collection('Vote').document('VoteStore').delete();
+}
+
+void deleteVoteStore(fireStore, String storeName) {
+  if (storeName != null) {
+    fireStore
+        .collection('Vote')
+        .document('VoteStore')
+        .updateData({storeName: FieldValue.delete()});
+  }
 }
 
 void uploadVoteTime(fireStore) {

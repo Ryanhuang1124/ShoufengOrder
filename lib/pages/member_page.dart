@@ -739,6 +739,20 @@ class _MemberPageState extends State<MemberPage> {
                       ),
                     ),
                   ),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(),
+                      ),
+                      Container(
+                        child: Text(
+                          //版本號
+                          'V1.0.2',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  )
                 ]),
               ),
             ],

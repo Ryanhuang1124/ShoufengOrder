@@ -11,6 +11,7 @@ import 'package:shoufeng_order/tools/accounting_builder.dart';
 import 'package:shoufeng_order/tools/member_builder.dart';
 import 'package:shoufeng_order/tools/menu_builder.dart';
 import 'package:shoufeng_order/tools/vote_builder.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 class AccountContent extends StatefulWidget {
   @override
@@ -26,9 +27,23 @@ class _AccountContentState extends State<AccountContent> {
   }
 
   Future<String> userName;
-
   String _selectType;
   String _couponCount;
+
+  final FocusNode _nodeText1 = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+      keyboardBarColor: Color.fromRGBO(88, 88, 88, 1),
+      nextFocus: false,
+      actions: [
+        KeyboardAction(
+          focusNode: _nodeText1,
+        ),
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -99,11 +114,8 @@ class _AccountContentState extends State<AccountContent> {
                     widgetsObjTemp.widgets.add(Container(
                       child: Row(
                         children: <Widget>[
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 100,
-                          ),
                           Expanded(
-                            flex: 1,
+                            flex: 5,
                             child: Center(
                               child: Text(
                                 obj.count[i],
@@ -113,9 +125,6 @@ class _AccountContentState extends State<AccountContent> {
                                         MediaQuery.of(context).size.width / 20),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width / 30,
                           ),
                           Expanded(
                             flex: 16,
@@ -261,7 +270,7 @@ class _AccountContentState extends State<AccountContent> {
                                   fireStore.collection('StoreList').snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  String storeName;
+                                  String storeName = '';
                                   String phoneNum = 'Unknow';
                                   for (var item in snapshot.data.documents) {
                                     if (item.documentID == 'imanomise') {
@@ -544,8 +553,8 @@ class _AccountContentState extends State<AccountContent> {
                                         itemCount: objListTemp.length,
                                         itemBuilder:
                                             (BuildContext context, int index) =>
-                                                BouncingWidget(
-                                          onPressed: () {
+                                                GestureDetector(
+                                          onTap: () {
                                             EasyDialog(
                                                 cardColor: Color.fromRGBO(
                                                     18, 18, 18, 1),
@@ -612,67 +621,71 @@ class _AccountContentState extends State<AccountContent> {
                                                                             .width /
                                                                         20),
                                                                 child:
-                                                                    TextFormField(
-                                                                  onChanged:
-                                                                      (data) {
-                                                                    if (!isNumeric(
-                                                                        data)) {
-                                                                      changeController
-                                                                          .clear();
-                                                                      BotToast
-                                                                          .showCustomText(
-                                                                        toastBuilder:
-                                                                            (_) =>
-                                                                                Align(
-                                                                          alignment: Alignment(
-                                                                              0,
-                                                                              0.8),
-                                                                          child:
-                                                                              Card(
+                                                                    KeyboardActions(
+                                                                  config:
+                                                                      _buildConfig(
+                                                                          context),
+                                                                  child:
+                                                                      TextField(
+                                                                    onChanged:
+                                                                        (data) {
+                                                                      if (!isNumeric(
+                                                                          data)) {
+                                                                        changeController
+                                                                            .clear();
+                                                                        BotToast
+                                                                            .showCustomText(
+                                                                          toastBuilder: (_) =>
+                                                                              Align(
+                                                                            alignment:
+                                                                                Alignment(0, 0.8),
                                                                             child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.symmetric(horizontal: 8),
-                                                                              child: Text(
-                                                                                '只能輸入數字哦..',
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'Yuanti',
-                                                                                  fontSize: 24,
-                                                                                  color: Color.fromRGBO(18, 18, 18, 1),
+                                                                                Card(
+                                                                              child: Padding(
+                                                                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                                                                child: Text(
+                                                                                  '只能輸入數字哦..',
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'Yuanti',
+                                                                                    fontSize: 24,
+                                                                                    color: Color.fromRGBO(18, 18, 18, 1),
+                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                        duration:
-                                                                            Duration(seconds: 3),
-                                                                        onlyOne:
-                                                                            true,
-                                                                        clickClose:
-                                                                            true,
-                                                                        ignoreContentClick:
-                                                                            true,
-                                                                      );
-                                                                    }
-                                                                  },
-                                                                  keyboardType:
-                                                                      TextInputType
-                                                                          .number,
-                                                                  controller:
-                                                                      changeController,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white),
-                                                                  maxLines: 1,
-                                                                  decoration:
-                                                                      InputDecoration(
-                                                                    hintStyle: TextStyle(
+                                                                          duration:
+                                                                              Duration(seconds: 3),
+                                                                          onlyOne:
+                                                                              true,
+                                                                          clickClose:
+                                                                              true,
+                                                                          ignoreContentClick:
+                                                                              true,
+                                                                        );
+                                                                      }
+                                                                    },
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    focusNode:
+                                                                        _nodeText1,
+                                                                    controller:
+                                                                        changeController,
+                                                                    style: TextStyle(
                                                                         color: Colors
-                                                                            .grey),
-                                                                    hintText:
-                                                                        "輸入已付金額(不是找錢金額..)",
-                                                                    border:
-                                                                        InputBorder
-                                                                            .none,
+                                                                            .white),
+                                                                    maxLines: 1,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintStyle:
+                                                                          TextStyle(
+                                                                              color: Colors.grey),
+                                                                      hintText:
+                                                                          "輸入已付金額(不是找錢金額..)",
+                                                                      border: InputBorder
+                                                                          .none,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
@@ -1017,7 +1030,7 @@ class _AccountContentState extends State<AccountContent> {
                                                                               ),
                                                                               onPressed: () {
                                                                                 String tempState;
-                                                                                tempState = stateBuilder(changeController.text, totalPriceList[index], _couponCount);
+                                                                                tempState = stateBuilder(changeController.text, totalPriceList[index].floor().toDouble(), _couponCount);
                                                                                 setState(() {});
                                                                                 if (tempState != '-1') {
                                                                                   uploadOrderState(fireStore, objListTemp[index].userName, tempState, changesBuilder(changeController.text, totalPriceList[index], _couponCount), changeController.text, _couponCount);

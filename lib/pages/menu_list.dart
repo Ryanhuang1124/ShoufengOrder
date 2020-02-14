@@ -11,6 +11,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:easy_dialog/easy_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 class MenuList extends StatefulWidget {
   @override
@@ -24,6 +25,21 @@ class _MenuListState extends State<MenuList> {
   Future<List<String>> storeList;
   Future<List<String>> imanoMise;
   final fireStore = Firestore.instance;
+
+  final FocusNode _nodeText1 = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+      keyboardBarColor: Color.fromRGBO(88, 88, 88, 1),
+      nextFocus: false,
+      actions: [
+        KeyboardAction(
+          focusNode: _nodeText1,
+        ),
+      ],
+    );
+  }
 
   void shopCart() {
     slideDialog.showSlideDialog(
@@ -1045,7 +1061,7 @@ class _MenuListState extends State<MenuList> {
     );
   }
 
-  void showDialog() {
+  void showDialogs() {
     slideDialog.showSlideDialog(
       context: context,
       backgroundColor: Color.fromRGBO(18, 18, 18, 1),
@@ -1643,7 +1659,7 @@ class _MenuListState extends State<MenuList> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {});
-                          showDialog();
+                          showDialogs();
                         },
                         child: Container(
                           child: Image.asset(
@@ -1808,8 +1824,7 @@ class _MenuListState extends State<MenuList> {
                                         right:
                                             MediaQuery.of(context).size.width /
                                                 13.06),
-                                    child: BouncingWidget(
-                                      scaleFactor: 1.0,
+                                    child: GestureDetector(
                                       child: Container(
                                         child: Center(
                                           child: Column(
@@ -1848,7 +1863,7 @@ class _MenuListState extends State<MenuList> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.elliptical(10, 10))),
                                       ),
-                                      onPressed: () {
+                                      onTap: () {
                                         setState(() {
                                           item.count++;
                                           if (item.count > 0) {
@@ -1932,17 +1947,24 @@ class _MenuListState extends State<MenuList> {
                                                               .size
                                                               .width /
                                                           39.2),
-                                                  child: TextFormField(
-                                                    controller: noteController,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                    maxLines: 1,
-                                                    decoration: InputDecoration(
-                                                      hintStyle: TextStyle(
-                                                          color: Colors.grey),
-                                                      hintText:
-                                                          "點此填寫備註(飲料加大..etc)",
-                                                      border: InputBorder.none,
+                                                  child: KeyboardActions(
+                                                    config:
+                                                        _buildConfig(context),
+                                                    child: TextField(
+                                                      controller:
+                                                          noteController,
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                      maxLines: 1,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintStyle: TextStyle(
+                                                            color: Colors.grey),
+                                                        hintText:
+                                                            "點此填寫備註(飲料加大..etc)",
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
                                                     ),
                                                   ),
                                                 )),
@@ -1991,59 +2013,69 @@ class _MenuListState extends State<MenuList> {
                                                               .size
                                                               .width /
                                                           39.2),
-                                                  child: TextFormField(
-                                                    onChanged: (text) {
-                                                      if (!isNumeric(text)) {
-                                                        //數字檢查
-                                                        BotToast.showCustomText(
-                                                          toastBuilder: (_) =>
-                                                              Align(
-                                                            alignment:
-                                                                Alignment(
-                                                                    0, 0.8),
-                                                            child: Card(
-                                                              child: Padding(
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                        horizontal:
-                                                                            8),
-                                                                child: Text(
-                                                                  '只能輸入數字哦..',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Yuanti',
-                                                                    fontSize:
-                                                                        24,
-                                                                    color: Colors
-                                                                        .black,
+                                                  child: KeyboardActions(
+                                                    config:
+                                                        _buildConfig(context),
+                                                    child: TextField(
+                                                      onChanged: (text) {
+                                                        if (!isNumeric(text)) {
+                                                          //數字檢查
+                                                          BotToast
+                                                              .showCustomText(
+                                                            toastBuilder: (_) =>
+                                                                Align(
+                                                              alignment:
+                                                                  Alignment(
+                                                                      0, 0.8),
+                                                              child: Card(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              8),
+                                                                  child: Text(
+                                                                    '只能輸入數字哦..',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Yuanti',
+                                                                      fontSize:
+                                                                          24,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          duration: Duration(
-                                                              seconds: 3),
-                                                          onlyOne: true,
-                                                          clickClose: true,
-                                                          ignoreContentClick:
-                                                              true,
-                                                        );
-                                                        priceController.clear();
-                                                      }
-                                                    },
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    controller: priceController,
-                                                    style: TextStyle(
-                                                        color: Colors.white),
-                                                    maxLines: 1,
-                                                    decoration: InputDecoration(
-                                                      hintStyle: TextStyle(
-                                                          color: Colors.grey),
-                                                      hintText:
-                                                          '輸入調整"後"的價錢(不變則不填)',
-                                                      border: InputBorder.none,
+                                                            duration: Duration(
+                                                                seconds: 3),
+                                                            onlyOne: true,
+                                                            clickClose: true,
+                                                            ignoreContentClick:
+                                                                true,
+                                                          );
+                                                          priceController
+                                                              .clear();
+                                                        }
+                                                      },
+                                                      focusNode: _nodeText1,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      controller:
+                                                          priceController,
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                      maxLines: 1,
+                                                      decoration:
+                                                          InputDecoration(
+                                                        hintStyle: TextStyle(
+                                                            color: Colors.grey),
+                                                        hintText:
+                                                            '輸入調整"後"的價錢(不變則不填)',
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
                                                     ),
                                                   ),
                                                 )),
@@ -2289,8 +2321,7 @@ class _MenuListState extends State<MenuList> {
                                         right:
                                             MediaQuery.of(context).size.width /
                                                 13.06),
-                                    child: BouncingWidget(
-                                      scaleFactor: 1.0,
+                                    child: GestureDetector(
                                       child: Container(
                                         child: Center(
                                           child: Column(
@@ -2320,7 +2351,7 @@ class _MenuListState extends State<MenuList> {
                                             borderRadius: BorderRadius.all(
                                                 Radius.elliptical(10, 10))),
                                       ),
-                                      onPressed: () {
+                                      onTap: () {
                                         setState(() {
                                           item.count++;
                                           if (item.count > 0) {
@@ -2405,7 +2436,7 @@ class _MenuListState extends State<MenuList> {
                                                                 .size
                                                                 .width /
                                                             39.2),
-                                                    child: TextFormField(
+                                                    child: TextField(
                                                       controller:
                                                           noteController,
                                                       style: TextStyle(
@@ -2467,64 +2498,76 @@ class _MenuListState extends State<MenuList> {
                                                                 .size
                                                                 .width /
                                                             39.2),
-                                                    child: TextFormField(
-                                                      onChanged: (text) {
-                                                        if (!isNumeric(text)) {
-                                                          //數字檢查
-                                                          BotToast
-                                                              .showCustomText(
-                                                            toastBuilder: (_) =>
-                                                                Align(
-                                                              alignment:
-                                                                  Alignment(
-                                                                      0, 0.8),
-                                                              child: Card(
-                                                                child: Padding(
-                                                                  padding: EdgeInsets
-                                                                      .symmetric(
-                                                                          horizontal:
-                                                                              8),
-                                                                  child: Text(
-                                                                    '只能輸入數字哦..',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Yuanti',
-                                                                      fontSize:
-                                                                          24,
-                                                                      color: Colors
-                                                                          .black,
+                                                    child: KeyboardActions(
+                                                      config:
+                                                          _buildConfig(context),
+                                                      child: TextField(
+                                                        onChanged: (text) {
+                                                          if (!isNumeric(
+                                                              text)) {
+                                                            //數字檢查
+                                                            BotToast
+                                                                .showCustomText(
+                                                              toastBuilder:
+                                                                  (_) => Align(
+                                                                alignment:
+                                                                    Alignment(
+                                                                        0, 0.8),
+                                                                child: Card(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsets
+                                                                        .symmetric(
+                                                                            horizontal:
+                                                                                8),
+                                                                    child: Text(
+                                                                      '只能輸入數字哦..',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Yuanti',
+                                                                        fontSize:
+                                                                            24,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            duration: Duration(
-                                                                seconds: 3),
-                                                            onlyOne: true,
-                                                            clickClose: true,
-                                                            ignoreContentClick:
-                                                                true,
-                                                          );
-                                                          priceController
-                                                              .clear();
-                                                        }
-                                                      },
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      controller:
-                                                          priceController,
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                      maxLines: 1,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        hintStyle: TextStyle(
-                                                            color: Colors.grey),
-                                                        hintText:
-                                                            '輸入調整"後"的價錢(不變則不填)',
-                                                        border:
-                                                            InputBorder.none,
+                                                              duration:
+                                                                  Duration(
+                                                                      seconds:
+                                                                          3),
+                                                              onlyOne: true,
+                                                              clickClose: true,
+                                                              ignoreContentClick:
+                                                                  true,
+                                                            );
+                                                            priceController
+                                                                .clear();
+                                                          }
+                                                        },
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        focusNode: _nodeText1,
+                                                        controller:
+                                                            priceController,
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        maxLines: 1,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          hintText:
+                                                              '輸入調整"後"的價錢(不變則不填)',
+                                                          border:
+                                                              InputBorder.none,
+                                                        ),
                                                       ),
                                                     ),
                                                   )),

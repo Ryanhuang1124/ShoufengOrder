@@ -20,142 +20,155 @@ class _VoteContentState extends State<VoteContent> {
   Future<List<String>> storeList;
   Future<String> userName;
 
+  int storeCount = 0;
+
   void voteMenuDialog() {
     slideDialog.showSlideDialog(
       context: context,
       backgroundColor: Color.fromRGBO(18, 18, 18, 1),
       transitionDuration: Duration(milliseconds: 700),
-      child: Expanded(
-        child: Container(
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.dashboard,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '新增候選店鋪',
-                      style: TextStyle(
-                          fontFamily: 'Yuanti',
-                          fontSize: 22,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 30,
-                ),
-                DragTarget<String>(
-                  onWillAccept: (data) {
-                    return data != null;
-                  },
-                  onAccept: (data) {
-                    setState(() {
-                      uploadVoteStore(fireStore, data);
-                    });
-                    Navigator.pop(context);
-                  },
-                  builder: (context, a, b) {
-                    return Container(
-                      height: 70,
-                      child: Center(
-                        child: Text(
-                          'Drag  to  here',
-                          style: TextStyle(
-                              color: Color.fromRGBO(18, 18, 18, 1),
-                              fontSize: 32,
-                              fontFamily: 'LilitaOne'),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(27, 180, 82, 0.75),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                FutureBuilder<List<String>>(
-                  future: storeList,
-                  builder: (context, snapshot) {
-                    List<Widget> storeList = List<Widget>();
-                    if (snapshot.hasData) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        for (var store in snapshot.data) {
-                          storeList.add(LongPressDraggable<String>(
-                            maxSimultaneousDrags: 1,
-                            childWhenDragging: Container(),
-                            data: store,
-                            feedback: Material(
-                              borderRadius:
-                                  BorderRadius.all(Radius.elliptical(10, 9)),
-                              color: Color.fromRGBO(27, 180, 82, 1),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.elliptical(10, 9)),
-                                    color: Color.fromRGBO(27, 180, 82, 1)),
-                                child: Center(
-                                    child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      fontSize: 30, fontFamily: 'Yuanti'),
-                                )),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.elliptical(10, 9)),
-                                    color: Color.fromRGBO(27, 180, 82, 1)),
-                                child: Center(
-                                    child: Text(
-                                  store,
-                                  style: TextStyle(
-                                      fontSize: 26, fontFamily: 'Yuanti'),
-                                )),
-                              ),
-                            ),
-                          ));
-                        }
-                        return Expanded(
-                          child: Container(
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              childAspectRatio: 2,
-                              crossAxisCount: 2,
-                              children: storeList,
-                            ),
+      child: FutureBuilder<String>(
+          future: userName,
+          builder: (context, snapshot) {
+            String userName = '';
+            if (snapshot.hasData) {
+              userName = snapshot.data;
+            }
+            return Expanded(
+              child: Container(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.dashboard,
+                            color: Colors.red,
+                            size: 30,
                           ),
-                        );
-                      } else {
-                        return Center(
-                            child: LoadingBouncingGrid.square(
-                          size: 10,
-                          duration: Duration(milliseconds: 700),
-                          backgroundColor: Color.fromRGBO(27, 180, 82, 1),
-                        ));
-                      }
-                    }
-                    return Container();
-                  },
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            '新增候選店鋪',
+                            style: TextStyle(
+                                fontFamily: 'Yuanti',
+                                fontSize: 22,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 30,
+                      ),
+                      DragTarget<String>(
+                        onWillAccept: (data) {
+                          return data != null;
+                        },
+                        onAccept: (data) {
+                          setState(() {
+                            uploadStoreSelect(fireStore, userName, data);
+                          });
+                          Navigator.pop(context);
+                        },
+                        builder: (context, a, b) {
+                          return Container(
+                            height: 70,
+                            child: Center(
+                              child: Text(
+                                'Drag  to  here',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(18, 18, 18, 1),
+                                    fontSize: 32,
+                                    fontFamily: 'LilitaOne'),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(27, 180, 82, 0.75),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      FutureBuilder<List<String>>(
+                        future: storeList,
+                        builder: (context, snapshot) {
+                          List<Widget> storeList = List<Widget>();
+                          if (snapshot.hasData) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              for (var store in snapshot.data) {
+                                storeList.add(LongPressDraggable<String>(
+                                  maxSimultaneousDrags: 1,
+                                  childWhenDragging: Container(),
+                                  data: store,
+                                  feedback: Material(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.elliptical(10, 9)),
+                                    color: Color.fromRGBO(27, 180, 82, 1),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.elliptical(10, 9)),
+                                          color:
+                                              Color.fromRGBO(27, 180, 82, 1)),
+                                      child: Center(
+                                          child: Text(
+                                        store,
+                                        style: TextStyle(
+                                            fontSize: 30, fontFamily: 'Yuanti'),
+                                      )),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.elliptical(10, 9)),
+                                          color:
+                                              Color.fromRGBO(27, 180, 82, 1)),
+                                      child: Center(
+                                          child: Text(
+                                        store,
+                                        style: TextStyle(
+                                            fontSize: 26, fontFamily: 'Yuanti'),
+                                      )),
+                                    ),
+                                  ),
+                                ));
+                              }
+                              return Expanded(
+                                child: Container(
+                                  child: GridView.count(
+                                    shrinkWrap: true,
+                                    childAspectRatio: 2,
+                                    crossAxisCount: 2,
+                                    children: storeList,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                  child: LoadingBouncingGrid.square(
+                                size: 10,
+                                duration: Duration(milliseconds: 700),
+                                backgroundColor: Color.fromRGBO(27, 180, 82, 1),
+                              ));
+                            }
+                          }
+                          return Container();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 
@@ -493,10 +506,12 @@ class _VoteContentState extends State<VoteContent> {
                                 });
                               }
                             }
-                            if (doc.documentID == 'VoteStore') {
+                            if (doc.documentID == 'storeSelect') {
+                              String temp = '';
                               if (doc.data != null) {
                                 doc.data.forEach((k, v) {
-                                  if (k != null) {
+                                  if (temp != v) {
+                                    temp = v;
                                     count++;
                                   }
                                 });
@@ -548,38 +563,43 @@ class _VoteContentState extends State<VoteContent> {
                         List<VoteStore> storesPicked = [];
                         List<Widget> storesBuilder = [];
                         if (snapshot.hasData) {
-                          for (var item in snapshot.data.documents) {
-                            if (item.documentID == 'VoteStore') {
-                              if (item.data != null) {
-                                item.data.forEach((k, v) {
-                                  if (k != null) {
-                                    storesPicked.add(new VoteStore(k));
-                                  }
-                                });
-                              }
-                            }
-                            if (item.documentID == 'storeSelect') {
-                              if (item.data != null) {
-                                item.data.forEach((k, v) {
-                                  if (k == userName) {
-                                    pickName = v;
-                                  }
-                                  for (var obj in storesPicked) {
-                                    if (v == obj.storeName) {
-                                      obj.count++;
+                          for (var doc in snapshot.data.documents) {
+                            if (doc.documentID == 'storeSelect') {
+                              if (doc.data != null) {
+                                doc.data.forEach((k, v) {
+                                  bool hasV = false;
+                                  for (int i = 0;
+                                      i < storesPicked.length;
+                                      i++) {
+                                    //走訪整個list尋找已有的storeName,若有則+1
+                                    if (storesPicked[i].storeName == v) {
+                                      storesPicked[i].count++;
+                                      hasV = true;
                                     }
                                   }
+                                  if (!hasV) {
+                                    //new storeName,create new obj
+                                    VoteStore temp = new VoteStore(v);
+                                    temp.count = 1;
+                                    storesPicked.add(temp);
+                                  } //fetch VoteStore data and sort
+                                  if (k == userName) {
+                                    pickName = v;
+                                  } //選中的store
                                 });
                               }
                             }
-                            if (item.documentID == 'VoteState') {
-                              if (item.data != null) {
-                                item.data.forEach((k, v) {
+                            if (doc.documentID == 'VoteState') {
+                              if (doc.data != null) {
+                                doc.data.forEach((k, v) {
                                   isShow = v;
                                 });
                               }
-                            }
+                            } //fetch isShow
                           }
+
+                          storeCount = storesPicked.length;
+
                           for (var obj in storesPicked) {
                             storesBuilder.add(
                               Visibility(
@@ -591,11 +611,14 @@ class _VoteContentState extends State<VoteContent> {
                                         padding: EdgeInsets.all(10),
                                         child: GestureDetector(
                                           onTap: () {
-                                            setState(() {
-                                              pickName = obj.storeName;
-                                            });
-                                            uploadStoreSelect(fireStore,
-                                                userName, obj.storeName);
+                                            setState(() {});
+                                            if (pickName == obj.storeName) {
+                                              cancelStoreSelect(
+                                                  fireStore, userName);
+                                            } else {
+                                              uploadStoreSelect(fireStore,
+                                                  userName, obj.storeName);
+                                            }
                                           },
                                           child: obj.storeName == pickName
                                               ? Container(

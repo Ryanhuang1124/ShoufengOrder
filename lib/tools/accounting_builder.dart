@@ -233,11 +233,17 @@ void consumeCoupon(String userName, String selected) async {
   int count;
   final doc =
       await Firestore.instance.collection('Coupons').document(userName).get();
-  doc.data.forEach((k, v) {
-    if (k == 'coupons') {
-      count = v;
-    }
-  });
+
+  if (doc.data != null) {
+    doc.data.forEach((k, v) {
+      if (k == 'coupons') {
+        count = v;
+      }
+    });
+  } else {
+    count = 0;
+  }
+
   if (selected != null) {
     thisSelected = int.tryParse(selected);
   } else {
