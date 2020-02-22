@@ -1,10 +1,12 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shoufeng_order/pages/accounting_content.dart';
 import 'package:shoufeng_order/pages/login_page.dart';
 import 'package:shoufeng_order/pages/menu_list.dart';
 import 'package:shoufeng_order/pages/ordering_page.dart';
 import 'package:shoufeng_order/pages/vote_content.dart';
+import 'package:shoufeng_order/tools/firebase_messagin.dart';
 import 'package:shoufeng_order/tools/login_builder.dart';
 import 'package:shoufeng_order/pages/main_page.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +22,10 @@ class Shoufeng extends StatefulWidget {
 
 class _ShoufengState extends State<Shoufeng> {
   Future<bool> futureIsLogin;
+  FirebaseMessaging _firebaseMessaging;
   @override
   void initState() {
+    _firebaseMessaging = configureMessaging();
     super.initState();
     futureIsLogin = getUserIsLogin();
   }
