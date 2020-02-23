@@ -747,7 +747,7 @@ class _MemberPageState extends State<MemberPage> {
                       Container(
                         child: Text(
                           //版本號
-                          'V1.0.2',
+                          'V1.0.3',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
