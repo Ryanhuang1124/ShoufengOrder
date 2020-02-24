@@ -83,7 +83,6 @@ void uploadFinalOrder(fireStore, List<MenuValue> list) async {
   String userName;
   SharedPreferences pref = await SharedPreferences.getInstance();
   userName = pref.getString('userName');
-  print(userName);
 
   if (userName != null) {
     for (int i = 0; i < list.length; i++) {
@@ -101,6 +100,27 @@ void uploadFinalOrder(fireStore, List<MenuValue> list) async {
   }
 }
 
+void uploadFinalOrder2(fireStore, List<MenuValue> list) async {
+  String userName;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  userName = pref.getString('userName');
+
+  if (userName != null) {
+    for (int i = 0; i < list.length; i++) {
+      List<String> temp = [];
+      temp.add(list[i].keys);
+      temp.add(list[i].value.toString());
+      temp.add(list[i].notePrice);
+      temp.add(list[i].note);
+      temp.add(list[i].count.toString());
+      await fireStore
+          .collection('Members2')
+          .document(userName)
+          .setData({i.toString(): temp}, merge: true);
+    }
+  }
+}
+
 void clearOrderCache(fireStore) async {
   SharedPreferences pref = await SharedPreferences.getInstance();
   String userName = pref.getString('userName');
@@ -108,6 +128,16 @@ void clearOrderCache(fireStore) async {
   if (userName != null) {
     fireStore.collection('Members').document(userName).delete();
     fireStore.collection('FinalState').document(userName).delete();
+  }
+}
+
+void clearOrderCache2(fireStore) async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String userName = pref.getString('userName');
+
+  if (userName != null) {
+    fireStore.collection('Members2').document(userName).delete();
+    fireStore.collection('FinalState2').document(userName).delete();
   }
 }
 
@@ -128,11 +158,37 @@ void clearAllOrder(fireStore, userName) async {
       .setData({'deleter': userName}, merge: true);
 }
 
+void clearAllOrder2(fireStore, userName) async {
+  fireStore.collection('Members2').getDocuments().then((snapshot) {
+    for (DocumentSnapshot ds in snapshot.documents) {
+      ds.reference.delete();
+    }
+  });
+  fireStore.collection('FinalState2').getDocuments().then((snapshot) {
+    for (DocumentSnapshot ds in snapshot.documents) {
+      ds.reference.delete();
+    }
+  });
+  await fireStore
+      .collection('Deleter')
+      .document('deleter')
+      .setData({'deleter': userName}, merge: true);
+}
+
 void uploadDefaultOrderState(fireStore, List<MenuValue> list) async {
   String userName;
   SharedPreferences pref = await SharedPreferences.getInstance();
   userName = pref.getString('userName');
   await fireStore.collection('FinalState').document(userName).setData(
+      {'changes': '0', 'state': '未付', 'paid': '0', 'couponCount': '0'},
+      merge: false);
+}
+
+void uploadDefaultOrderState2(fireStore, List<MenuValue> list) async {
+  String userName;
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  userName = pref.getString('userName');
+  await fireStore.collection('FinalState2').document(userName).setData(
       {'changes': '0', 'state': '未付', 'paid': '0', 'couponCount': '0'},
       merge: false);
 }
@@ -156,6 +212,25 @@ void uploadOrderState(fireStore, String userName, String state, String changes,
   }, merge: false);
 }
 
+void uploadOrderState2(fireStore, String userName, String state, String changes,
+    String paid, String couponCount) async {
+  String thisChanges;
+
+  if (state == '結清') {
+    thisChanges = '0';
+  } else {
+    thisChanges = changes;
+  }
+
+  await fireStore.collection('FinalState2').document(userName).setData({
+    'changes': thisChanges,
+    'state': state,
+    'paid': paid,
+    'couponCount':
+        (couponCount == '請選擇' || couponCount == null) ? '0' : couponCount
+  }, merge: false);
+}
+
 void changeOrderState(
     fireStore, String userName, String state, String changes) async {
   String thisChanges;
@@ -169,6 +244,27 @@ void changeOrderState(
   } else {
     thisChanges = changes;
     await fireStore.collection('FinalState').document(userName).setData({
+      'changes': '0',
+      'state': state,
+      'couponCount': '0',
+      'paid': '0',
+    }, merge: true);
+  }
+}
+
+void changeOrderState2(
+    fireStore, String userName, String state, String changes) async {
+  String thisChanges;
+
+  if (state == '結清') {
+    thisChanges = '0';
+    await fireStore.collection('FinalState2').document(userName).setData({
+      'changes': thisChanges,
+      'state': state,
+    }, merge: true);
+  } else {
+    thisChanges = changes;
+    await fireStore.collection('FinalState2').document(userName).setData({
       'changes': '0',
       'state': state,
       'couponCount': '0',

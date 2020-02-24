@@ -13,12 +13,12 @@ import 'package:shoufeng_order/tools/menu_builder.dart';
 import 'package:shoufeng_order/tools/vote_builder.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-class AccountContent extends StatefulWidget {
+class AccountContent2 extends StatefulWidget {
   @override
-  _AccountContentState createState() => _AccountContentState();
+  _AccountContentState2 createState() => _AccountContentState2();
 }
 
-class _AccountContentState extends State<AccountContent> {
+class _AccountContentState2 extends State<AccountContent2> {
   final TextEditingController changeController = TextEditingController();
   final fireStore = Firestore.instance;
   int cupertinoTabBarValue = 0;
@@ -88,7 +88,7 @@ class _AccountContentState extends State<AccountContent> {
             color: Color.fromRGBO(18, 18, 18, 1),
           ),
           child: StreamBuilder<QuerySnapshot>(
-            stream: fireStore.collection('Members').snapshots(),
+            stream: fireStore.collection('Members2').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 List<double> totalPriceList = [];
@@ -273,7 +273,7 @@ class _AccountContentState extends State<AccountContent> {
                                   String storeName = '';
                                   String phoneNum = 'Unknow';
                                   for (var item in snapshot.data.documents) {
-                                    if (item.documentID == 'imanomise') {
+                                    if (item.documentID == 'imanomise2') {
                                       item.data.forEach((k, v) {
                                         storeName = v;
                                       });
@@ -465,7 +465,7 @@ class _AccountContentState extends State<AccountContent> {
                                                     ),
                                                     onPressed: () async {
                                                       setState(() {});
-                                                      clearOrderCache(
+                                                      clearOrderCache2(
                                                           fireStore);
                                                       BotToast.showCustomText(
                                                         toastBuilder: (_) =>
@@ -1033,7 +1033,7 @@ class _AccountContentState extends State<AccountContent> {
                                                                                 tempState = stateBuilder(changeController.text, totalPriceList[index].floor().toDouble(), _couponCount);
                                                                                 setState(() {});
                                                                                 if (tempState != '-1') {
-                                                                                  uploadOrderState(fireStore, objListTemp[index].userName, tempState, changesBuilder(changeController.text, totalPriceList[index], _couponCount), changeController.text, _couponCount);
+                                                                                  uploadOrderState2(fireStore, objListTemp[index].userName, tempState, changesBuilder(changeController.text, totalPriceList[index], _couponCount), changeController.text, _couponCount);
                                                                                   if (_couponCount != '請選擇') {
                                                                                     consumeCoupon(userName, _couponCount);
                                                                                   }
@@ -1142,7 +1142,7 @@ class _AccountContentState extends State<AccountContent> {
                                                           stream: Firestore
                                                               .instance
                                                               .collection(
-                                                                  'FinalState')
+                                                                  'FinalState2')
                                                               .snapshots(),
                                                           builder: (context,
                                                               snapshot) {
@@ -1281,7 +1281,7 @@ class _AccountContentState extends State<AccountContent> {
                                                 StreamBuilder<QuerySnapshot>(
                                                     stream: fireStore
                                                         .collection(
-                                                            'FinalState')
+                                                            'FinalState2')
                                                         .snapshots(),
                                                     builder:
                                                         (context, snapshot) {
@@ -1484,7 +1484,7 @@ class _AccountContentState extends State<AccountContent> {
                                                                                               onPressed: () {
                                                                                                 setState(() {});
 
-                                                                                                changeOrderState(fireStore, objListTemp[index].userName, _selectType, '0');
+                                                                                                changeOrderState2(fireStore, objListTemp[index].userName, _selectType, '0');
 
                                                                                                 BotToast.showCustomText(
                                                                                                   toastBuilder: (_) => Align(
@@ -1645,7 +1645,7 @@ class _AccountContentState extends State<AccountContent> {
                                     child: Row(
                                       children: <Widget>[
                                         Text(
-                                          '①',
+                                          '②',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontFamily: 'Yuanti',
@@ -1831,12 +1831,8 @@ class _AccountContentState extends State<AccountContent> {
                                                                         'userName');
                                                                 if (userName !=
                                                                     null) {
-                                                                  clearAllOrder(
+                                                                  clearAllOrder2(
                                                                       fireStore,
-                                                                      userName);
-                                                                  uploadVoteState(
-                                                                      fireStore,
-                                                                      false,
                                                                       userName);
                                                                   BotToast
                                                                       .showCustomText(
@@ -1964,7 +1960,7 @@ class _AccountContentState extends State<AccountContent> {
                                           onTap: () {
                                             setState(() {});
                                             Navigator.pushReplacementNamed(
-                                                context, '/accounting2');
+                                                context, '/accounting');
                                           },
                                           child: Container(
                                             child: Image.asset(
@@ -1975,7 +1971,7 @@ class _AccountContentState extends State<AccountContent> {
                                         ),
                                       ],
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             )

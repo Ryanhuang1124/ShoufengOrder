@@ -39,6 +39,30 @@ Future<List<MenuValue>> getMenu(fireStore) async {
   return menuList;
 }
 
+Future<List<MenuValue>> getMenu2(fireStore) async {
+  String imanomise2 = '';
+  List<MenuValue> menuList = new List<MenuValue>();
+
+  final mise =
+      await fireStore.collection('StoreList').document('imanomise2').get();
+
+  mise.data.forEach((k, v) {
+    imanomise2 = v;
+  });
+//  fetch storeName
+
+  final menu = await fireStore.collection(imanomise2).getDocuments();
+  //menu is one of documents (漢堡 飲料etc)
+  for (var menu in menu.documents) {
+    //menu.data return a Map which include all of items(key : value)
+    menu.data.forEach((k, v) {
+      String vs = v.toString();
+      menuList.add(new MenuValue(menu.documentID, k, vs));
+    });
+  }
+  return menuList;
+}
+
 Future<List<String>> getStore(fireStore) async {
   List<String> storeList = new List<String>();
 
@@ -74,11 +98,56 @@ Future<List<String>> getImanomise(fireStore) async {
   return imanomise;
 }
 
+Future<List<String>> getImanomise2(fireStore) async {
+  String misenamai2 = '';
+  String url;
+  List<String> imanomise2 = new List<String>();
+  final mise =
+      await fireStore.collection('StoreList').document('imanomise2').get();
+
+  await mise.data.forEach((k, v) {
+    misenamai2 = v;
+  });
+
+  final fireStorageRef =
+      FirebaseStorage.instance.ref().child('$misenamai2.jpg');
+  if (fireStorageRef != null) {
+    url = await fireStorageRef.getDownloadURL();
+  }
+
+  imanomise2.add(misenamai2);
+  imanomise2.add(url);
+
+  return imanomise2;
+}
+
 void uploadImanomise(fireStore, storeName) async {
   await fireStore
       .collection('StoreList')
       .document('imanomise')
       .setData({'imanomise': storeName}, merge: false);
+}
+
+void uploadImanomise2(fireStore, storeName) async {
+  await fireStore
+      .collection('StoreList')
+      .document('imanomise2')
+      .setData({'imanomise2': storeName}, merge: false);
+}
+
+void resetImanomise1(fireStore) async {
+  print('aaa');
+  await fireStore
+      .collection('StoreList')
+      .document('imanomise')
+      .setData({'imanomise': '請選擇'}, merge: false);
+}
+
+void resetImanomise2(fireStore) async {
+  await fireStore
+      .collection('StoreList')
+      .document('imanomise2')
+      .setData({'imanomise2': '請選擇'}, merge: false);
 }
 
 bool isNumeric(String s) {

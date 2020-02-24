@@ -13,17 +13,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'package:keyboard_actions/keyboard_actions.dart';
 
-class MenuList extends StatefulWidget {
+class MenuList2 extends StatefulWidget {
   @override
-  _MenuListState createState() => _MenuListState();
+  _MenuListState2 createState() => _MenuListState2();
 }
 
-class _MenuListState extends State<MenuList> {
+class _MenuListState2 extends State<MenuList2> {
   final TextEditingController noteController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   Future<List<MenuValue>> menuObjList;
   Future<List<String>> storeList;
-  Future<List<String>> imanoMise;
+  Future<List<String>> imanoMise2;
   final fireStore = Firestore.instance;
 
   final FocusNode _nodeText1 = FocusNode();
@@ -259,7 +259,7 @@ class _MenuListState extends State<MenuList> {
                                                 onPressed: () {
                                                   setState(() {});
                                                   menuObjList =
-                                                      getMenu(fireStore);
+                                                      getMenu2(fireStore);
                                                   BotToast.showCustomText(
                                                     toastBuilder: (_) => Align(
                                                       alignment:
@@ -433,20 +433,16 @@ class _MenuListState extends State<MenuList> {
                                                 ),
                                                 onPressed: () {
                                                   setState(() {
-                                                    clearOrderCache(fireStore);
-                                                    uploadFinalOrder(
+                                                    clearOrderCache2(fireStore);
+                                                    uploadFinalOrder2(
                                                         fireStore, temp);
-                                                    uploadDefaultOrderState(
+                                                    uploadDefaultOrderState2(
                                                         fireStore, temp);
                                                     menuObjList =
-                                                        getMenu(fireStore);
-                                                    Navigator.popUntil(
-                                                      context,
-                                                      ModalRoute.withName(
-                                                          '/menulist'),
-                                                    );
-                                                    Navigator.pushNamed(
-                                                        context, '/accounting');
+                                                        getMenu2(fireStore);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   });
                                                   BotToast.showCustomText(
                                                     toastBuilder: (_) => Align(
@@ -723,7 +719,7 @@ class _MenuListState extends State<MenuList> {
                       height: MediaQuery.of(context).size.height / 26.56,
                       buttonColor: Color.fromRGBO(29, 185, 84, 1),
                       child: FutureBuilder<List<String>>(
-                        future: imanoMise,
+                        future: imanoMise2,
                         builder: (context, snapshot) {
                           List<String> temp;
                           List<MenuValue> objTemp;
@@ -849,14 +845,15 @@ class _MenuListState extends State<MenuList> {
                                                   ),
                                                   onPressed: () {
                                                     setState(() {
-                                                      clearOrderCache(
+                                                      //todo
+                                                      clearOrderCache2(
                                                           fireStore);
-                                                      uploadFinalOrder(
+                                                      uploadFinalOrder2(
                                                           fireStore, objTemp);
-                                                      uploadDefaultOrderState(
+                                                      uploadDefaultOrderState2(
                                                           fireStore, objTemp);
                                                       menuObjList =
-                                                          getMenu(fireStore);
+                                                          getMenu2(fireStore);
                                                       Navigator.popUntil(
                                                         context,
                                                         ModalRoute.withName(
@@ -946,7 +943,7 @@ class _MenuListState extends State<MenuList> {
                   height: MediaQuery.of(context).size.height / 30,
                 ),
                 FutureBuilder<List<String>>(
-                  future: imanoMise,
+                  future: imanoMise2,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       storeName = snapshot.data[0];
@@ -1071,7 +1068,7 @@ class _MenuListState extends State<MenuList> {
           child: Padding(
             padding: EdgeInsets.all(MediaQuery.of(context).size.width / 19.6),
             child: StreamBuilder<QuerySnapshot>(
-                stream: fireStore.collection('FinalState').snapshots(),
+                stream: fireStore.collection('FinalState2').snapshots(),
                 builder: (context, streamsnapshot) {
                   return Column(
                     children: <Widget>[
@@ -1261,10 +1258,10 @@ class _MenuListState extends State<MenuList> {
                                       setState(() {
                                         rng = Random()
                                             .nextInt(snapshot.data.length);
-                                        uploadImanomise(
+                                        uploadImanomise2(
                                             fireStore, snapshot.data[rng]);
-                                        imanoMise = getImanomise(fireStore);
-                                        menuObjList = getMenu(fireStore);
+                                        imanoMise2 = getImanomise2(fireStore);
+                                        menuObjList = getMenu2(fireStore);
                                       });
                                       Navigator.pop(context);
                                     }
@@ -1447,9 +1444,9 @@ class _MenuListState extends State<MenuList> {
                                     ),
                                   ]).show(context);
                             } else {
-                              uploadImanomise(fireStore, data);
-                              imanoMise = getImanomise(fireStore);
-                              menuObjList = getMenu(fireStore);
+                              uploadImanomise2(fireStore, data);
+                              imanoMise2 = getImanomise2(fireStore);
+                              menuObjList = getMenu2(fireStore);
                             }
                           });
                         },
@@ -1469,7 +1466,7 @@ class _MenuListState extends State<MenuList> {
                                         fontFamily: 'LilitaOne'),
                                   ),
                                   FutureBuilder<List<String>>(
-                                    future: imanoMise,
+                                    future: imanoMise2,
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
                                         if (snapshot.connectionState ==
@@ -1620,8 +1617,8 @@ class _MenuListState extends State<MenuList> {
   @override
   void initState() {
     super.initState();
-    imanoMise = getImanomise(fireStore);
-    menuObjList = getMenu(fireStore);
+    imanoMise2 = getImanomise2(fireStore);
+    menuObjList = getMenu2(fireStore);
     storeList = getStore(fireStore);
   }
 
@@ -1639,20 +1636,8 @@ class _MenuListState extends State<MenuList> {
                 sliver: SliverAppBar(
                   backgroundColor: Color.fromRGBO(18, 18, 18, 1),
                   actions: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {});
-                        Navigator.pushNamed(context, '/menulist2');
-                      },
-                      child: Container(
-                        child: Image.asset(
-                          'images/secondPage.png',
-                          scale: 6,
-                        ),
-                      ),
-                    ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 30,
+                      width: MediaQuery.of(context).size.width / 20,
                     ),
                     GestureDetector(
                       onTap: () {
@@ -1667,7 +1652,7 @@ class _MenuListState extends State<MenuList> {
                       ),
                     ),
                     SizedBox(
-                      width: MediaQuery.of(context).size.width / 30,
+                      width: MediaQuery.of(context).size.width / 20,
                     ),
                     Hero(
                       tag: 'bottle_order',
@@ -1695,7 +1680,7 @@ class _MenuListState extends State<MenuList> {
                     title: Transform.translate(
                       offset: Offset(0, -18),
                       child: FutureBuilder<List<String>>(
-                        future: imanoMise,
+                        future: imanoMise2,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             if (snapshot.connectionState ==
@@ -1733,7 +1718,7 @@ class _MenuListState extends State<MenuList> {
                     ),
                     background: FutureBuilder<List<String>>(
                       //背景圖片
-                      future: imanoMise,
+                      future: imanoMise2,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           if (snapshot.connectionState ==
@@ -2112,7 +2097,7 @@ class _MenuListState extends State<MenuList> {
                                                         )),
                                                     child: FutureBuilder<
                                                         List<String>>(
-                                                      future: imanoMise,
+                                                      future: imanoMise2,
                                                       builder:
                                                           (context, snapshot) {
                                                         return FlatButton(
@@ -2133,7 +2118,7 @@ class _MenuListState extends State<MenuList> {
                                                             temp.note =
                                                                 noteController
                                                                     .text;
-                                                            prefFavList(
+                                                            prefFavList2(
                                                                 temp,
                                                                 snapshot
                                                                     .data[0]);
@@ -2601,7 +2586,7 @@ class _MenuListState extends State<MenuList> {
                                                           )),
                                                       child: FutureBuilder<
                                                           List<String>>(
-                                                        future: imanoMise,
+                                                        future: imanoMise2,
                                                         builder: (context,
                                                             snapshot) {
                                                           return FlatButton(
@@ -2850,14 +2835,14 @@ class _MenuListState extends State<MenuList> {
                           width: MediaQuery.of(context).size.width / 30,
                         ),
                         Text(
-                          '①',
+                          '②',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Yuanti',
                             fontSize: MediaQuery.of(context).size.height / 25,
                           ),
                         ),
-                        Expanded(flex: 1, child: SizedBox()),
+                        Expanded(child: SizedBox()),
                         Text(
                           '共 $allCount 品項 , ${allPrice.floor()} 元',
                           style: TextStyle(
@@ -2866,7 +2851,7 @@ class _MenuListState extends State<MenuList> {
                             fontSize: MediaQuery.of(context).size.height / 25,
                           ),
                         ),
-                        Expanded(flex: 2, child: SizedBox()),
+                        Expanded(child: SizedBox()),
                       ],
                     ),
                   ),

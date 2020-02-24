@@ -2,8 +2,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shoufeng_order/pages/accounting_content.dart';
+import 'package:shoufeng_order/pages/accounting_content_second.dart';
 import 'package:shoufeng_order/pages/login_page.dart';
 import 'package:shoufeng_order/pages/menu_list.dart';
+import 'package:shoufeng_order/pages/menu_list_second.dart';
 import 'package:shoufeng_order/pages/ordering_page.dart';
 import 'package:shoufeng_order/pages/vote_content.dart';
 import 'package:shoufeng_order/tools/firebase_messagin.dart';
@@ -44,6 +46,8 @@ class _ShoufengState extends State<Shoufeng> {
               navigatorObservers: [BotToastNavigatorObserver()],
               initialRoute: '/',
               routes: {
+                '/accounting2': (context) => AccountContent2(),
+                '/menulist2': (context) => MenuList2(),
                 '/loggin': (context) => LoginPage(),
                 '/main': (context) => MainPage(),
                 '/vote': (context) => VoteContent(),
