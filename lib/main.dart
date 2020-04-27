@@ -43,20 +43,22 @@ class _ShoufengState extends State<Shoufeng> {
           bool isLogin = snapshot.data;
           return BotToastInit(
             child: MaterialApp(
-              navigatorObservers: [BotToastNavigatorObserver()],
-              initialRoute: '/',
-              routes: {
-                '/accounting2': (context) => AccountContent2(),
-                '/menulist2': (context) => MenuList2(),
-                '/loggin': (context) => LoginPage(),
-                '/main': (context) => MainPage(),
-                '/vote': (context) => VoteContent(),
-                '/accounting': (context) => AccountContent(),
-                '/menulist': (context) => MenuList(),
-                '/ordering': (context) => OrderingPage(),
-              },
-              home: isLogin ? MainPage() : LoginPage(),
-            ),
+                navigatorObservers: [BotToastNavigatorObserver()],
+                initialRoute: '/',
+                routes: {
+                  '/accounting2': (context) => AccountContent2(),
+                  '/menulist2': (context) => MenuList2(),
+                  '/loggin': (context) => LoginPage(),
+                  '/main': (context) => MainPage(),
+                  '/vote': (context) => VoteContent(),
+                  '/accounting': (context) => AccountContent(),
+                  '/menulist': (context) => MenuList(),
+                  '/ordering': (context) => OrderingPage(),
+                },
+                home: DefaultTabController(
+                  length: 1,
+                  child: isLogin ? MainPage() : LoginPage(),
+                )),
           );
         } else {
           return Container();

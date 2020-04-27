@@ -34,6 +34,9 @@ dependencies:
   xlive_switch: ^1.0.5
   keyboard_actions: ^3.2.0
   firebase_messaging: ^6.0.9
+  shifting_tabbar: ^0.3.1
+
+
 
 
 dev_dependencies:
