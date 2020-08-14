@@ -35,6 +35,12 @@ dependencies:
   keyboard_actions: ^3.2.0
   firebase_messaging: ^6.0.9
   shifting_tabbar: ^0.3.1
+  http: ^0.12.1
+  path_provider: ^1.6.7
+  photo_view: ^0.9.2
+
+
+
 
 
 

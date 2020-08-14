@@ -119,7 +119,7 @@ class _AccountPageState extends State<AccountPage>
                 ),
               ), //標題列
               Text(
-                'Accounting System',
+                'Accounting',
                 style: TextStyle(
                   fontFamily: 'Courgette',
                   fontSize: 25,

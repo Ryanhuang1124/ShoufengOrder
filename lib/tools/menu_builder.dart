@@ -1,4 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'dart:math';
 
 class MenuValue {
   String docID;
@@ -87,7 +91,7 @@ Future<List<String>> getImanomise(fireStore) async {
     misenamai = v;
   });
 
-  final fireStorageRef = FirebaseStorage.instance.ref().child('$misenamai.jpg');
+  final fireStorageRef = FirebaseStorage.instance.ref().child('$misenamai');
   if (fireStorageRef != null) {
     url = await fireStorageRef.getDownloadURL();
   }
@@ -109,8 +113,7 @@ Future<List<String>> getImanomise2(fireStore) async {
     misenamai2 = v;
   });
 
-  final fireStorageRef =
-      FirebaseStorage.instance.ref().child('$misenamai2.jpg');
+  final fireStorageRef = FirebaseStorage.instance.ref().child('$misenamai2');
   if (fireStorageRef != null) {
     url = await fireStorageRef.getDownloadURL();
   }
@@ -157,3 +160,8 @@ bool isNumeric(String s) {
     return double.tryParse(s) != null;
   }
 } //數字檢查器
+
+bool hasBlank(String s) {
+  return s == null || s.trim() == '' || s.isEmpty ? true : false;
+}
+//空格檢查器

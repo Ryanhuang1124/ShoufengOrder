@@ -13,8 +13,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  //版本號碼
+  static String version = '1.0.5';
   int currentPage = 0;
-  final pages = [VotePage(), OrderingPage(), AccountPage(), MemberPage()];
+  final pages = [
+    VotePage(),
+    OrderingPage(
+      version: version,
+    ),
+    AccountPage(),
+    MemberPage(
+      version: version,
+    )
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +34,7 @@ class _MainPageState extends State<MainPage> {
           TabData(iconData: Icons.star, title: '投票'),
           TabData(iconData: Icons.library_books, title: '點餐'),
           TabData(iconData: Icons.local_grocery_store, title: '結算'),
-          TabData(iconData: Icons.assignment_ind, title: '資料'),
+          TabData(iconData: Icons.assignment_ind, title: '設定'),
         ],
         onTabChangedListener: (position) {
           setState(

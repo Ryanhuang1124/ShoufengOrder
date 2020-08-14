@@ -1721,7 +1721,7 @@ class _AccountContentState extends State<AccountContent> {
                                                   Expanded(
                                                     child: Container(
                                                       child: Text(
-                                                        '確定清空全部訂單',
+                                                        '確定清空訂單嗎?',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Yuanti',
@@ -1738,7 +1738,7 @@ class _AccountContentState extends State<AccountContent> {
                                                   Expanded(
                                                     child: Container(
                                                       child: Text(
-                                                        '並重啟投票？',
+                                                        '(未找錢記得截圖)',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Yuanti',
@@ -1833,10 +1833,6 @@ class _AccountContentState extends State<AccountContent> {
                                                                     null) {
                                                                   clearAllOrder(
                                                                       fireStore,
-                                                                      userName);
-                                                                  uploadVoteState(
-                                                                      fireStore,
-                                                                      false,
                                                                       userName);
                                                                   BotToast
                                                                       .showCustomText(

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:beauty_textfield/beauty_textfield.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
+import 'package:keyboard_actions/keyboard_actions_config.dart';
 import 'package:progress_indicator_button/progress_button.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:shoufeng_order/tools/login_builder.dart';
@@ -16,6 +18,21 @@ class _LoginPageState extends State<LoginPage> {
   final fireStore = Firestore.instance;
   Future<List<UserData>> userList;
   String inputID = '';
+  final FocusNode _nodeText1 = FocusNode();
+
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.IOS,
+      keyboardBarColor: Color.fromRGBO(88, 88, 88, 1),
+      nextFocus: false,
+      actions: [
+        KeyboardAction(
+          focusNode: _nodeText1,
+        ),
+      ],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       child: Center(
                           child: Text(
-                        'Loggin',
+                        'Ordering',
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'Courgette',
@@ -85,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: MediaQuery.of(context).size.width / 1.25,
                       height: MediaQuery.of(context).size.height / 13,
                       duration: Duration(milliseconds: 600),
-                      inputType: TextInputType.number,
+                      inputType: TextInputType.text,
                       prefixIcon: Icon(
                         Icons.lock_outline,
                       ),
@@ -104,13 +121,14 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 7,
                     ),
+                    SizedBox(),
                     FutureBuilder<List<UserData>>(
                       future: userList,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           String userName = '';
                           return Container(
-                            width: MediaQuery.of(context).size.width / 3,
+                            width: MediaQuery.of(context).size.width / 2.5,
                             height: MediaQuery.of(context).size.height / 13,
                             child: ProgressButton(
                               color: Color.fromRGBO(66, 39, 122, 1),
@@ -120,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               strokeWidth: 10,
                               child: Text(
-                                "Log  in",
+                                "Sign  In",
                                 style: TextStyle(
                                   fontFamily: 'LilitaOne',
                                   color: Colors.white,
@@ -186,8 +204,26 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     SizedBox(
+                      height: MediaQuery.of(context).size.height / 70,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
+                      child: Container(
+                        child: Text(
+                          'Sign  Up',
+                          style: TextStyle(
+                              fontFamily: 'lilitaOne',
+                              fontSize: 23,
+                              color: Colors.lightBlue,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
                       height: MediaQuery.of(context).size.height / 4,
-                    )
+                    ),
                   ],
                 ),
               ],

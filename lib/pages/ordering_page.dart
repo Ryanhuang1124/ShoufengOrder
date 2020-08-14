@@ -4,11 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_dialog/easy_dialog.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shoufeng_order/pages/update_reminder.dart';
 import 'package:shoufeng_order/tools/member_builder.dart';
 import 'package:shoufeng_order/tools/vote_builder.dart';
 import 'package:shoufeng_order/widgets/wave_widgets.dart';
 
 class OrderingPage extends StatefulWidget {
+  final String version;
+
+  const OrderingPage({Key key, this.version}) : super(key: key);
   @override
   _OrderingPageState createState() => _OrderingPageState();
 }
@@ -25,6 +29,8 @@ class _OrderingPageState extends State<OrderingPage>
   final fireStore = Firestore.instance;
 
   bool wave_Visible = true;
+
+  Future<bool> updateReminder;
   @override
   void initState() {
     super.initState();
@@ -79,292 +85,339 @@ class _OrderingPageState extends State<OrderingPage>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: <Widget>[
-        Container(
-          //底層
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Color.fromRGBO(66, 147, 175, 1),
-                Color.fromRGBO(51, 8, 103, 1),
-              ],
-            ),
-          ),
-        ),
-        SafeArea(
-          child: Column(
-            //上層
+    return StreamBuilder<QuerySnapshot>(
+        stream: fireStore.collection('UpdateReminder').snapshots(),
+        builder: (context, snapshot) {
+          bool isRemind = false;
+          String version = '';
+          if (snapshot.hasData) {
+            for (var doc in snapshot.data.documents) {
+              if (doc.documentID == 'isShow') {
+                doc.data.forEach((k, v) {
+                  isRemind = v;
+                });
+              }
+              if (doc.documentID == 'version') {
+                doc.data.forEach((k, v) {
+                  version = v;
+                });
+              }
+            }
+          }
+          return Stack(
+            alignment: Alignment.bottomCenter,
             children: <Widget>[
-              SizedBox(
-                height: 10,
+              Container(
+                //底層
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Color.fromRGBO(66, 147, 175, 1),
+                      Color.fromRGBO(51, 8, 103, 1),
+                    ],
+                  ),
+                ),
               ),
-              Text(
-                'ShouFeng',
-                style: TextStyle(
-                  fontFamily: 'Pacifico',
-                  fontSize: 60,
-                  color: Colors.white,
-                ),
-              ), //標題列
-              Text(
-                'Ordering System',
-                style: TextStyle(
-                  fontFamily: 'Courgette',
-                  fontSize: 25,
-                  color: Colors.white,
-                ),
-              ), //副標題
-            ],
-          ),
-        ),
-        //
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            SizedBox(
-              height: 1,
-              width: 1,
-            ),
-            Column(
-              children: <Widget>[
-                SizedBox(
-                  height: bottle_move,
-                ),
-                FutureBuilder<bool>(
-                  future: getBottleState(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data) {
-                        bottle_visible = true;
-                      }
-                    } else {
-                      bottle_visible = false;
-                    }
-                    return Hero(
-                      tag: 'bottle_vote',
-                      child: Visibility(
-                        visible: bottle_visible,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/menulist');
-                          },
-                          child: Container(
-                            child: Image.asset(
-                              'images/message_in_a_bottle.png',
-                              scale: 5,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-        Visibility(
-          visible: moneyVisible,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: Row(
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              SafeArea(
+                child: Column(
+                  //上層
                   children: <Widget>[
                     SizedBox(
-                      height: bottle_move / 3,
+                      height: 10,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        moneyVisible = false;
-                        addCouponsCount(fireStore);
-                        setState(() {});
-                        EasyDialog(
-                            cardColor: Color.fromRGBO(18, 18, 18, 1),
-                            cornerRadius: 15.0,
-                            fogOpacity: 0.1,
-                            width: MediaQuery.of(context).size.width / 1.568,
-                            height: MediaQuery.of(context).size.height / 4.25,
-                            contentPadding: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height / 70.83,
-                            ), // Needed for the button design
-                            contentList: [
-                              Expanded(
-                                flex: 1,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                        padding: EdgeInsets.only(left: 15.0)),
-                                    Text(
-                                      "恭喜！",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Yuanti',
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              23.05),
-                                      textScaleFactor: 1.3,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 15.0),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
+                    Text(
+                      'ShouFeng',
+                      style: TextStyle(
+                        fontFamily: 'Pacifico',
+                        fontSize: 60,
+                        color: Colors.white,
+                      ),
+                    ), //標題列
+                    Text(
+                      'Ordering',
+                      style: TextStyle(
+                        fontFamily: 'Courgette',
+                        fontSize: 25,
+                        color: Colors.white,
+                      ),
+                    ), //副標題
+                  ],
+                ),
+              ),
+              //
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  SizedBox(
+                    height: 1,
+                    width: 1,
+                  ),
+                  Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: bottle_move,
+                      ),
+                      FutureBuilder<bool>(
+                        future: getBottleState(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data) {
+                              bottle_visible = true;
+                            }
+                          } else {
+                            bottle_visible = false;
+                          }
+                          return Hero(
+                            tag: 'bottle_vote',
+                            child: Visibility(
+                              visible: bottle_visible,
+                              child: GestureDetector(
+                                onTap: () {
+                                  if ((version != widget.version) &&
+                                      (isRemind)) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                UpdateReminderPage(
+                                                  localVersion: widget.version,
+                                                  liveVersion: version,
+                                                )));
+                                  } else {
+                                    Navigator.pushNamed(context, '/menulist');
+                                  }
+                                },
                                 child: Container(
-                                  child: Text(
-                                    '獲得一張5元折價券',
-                                    style: TextStyle(
-                                        fontFamily: 'Yuanti',
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                17.81,
-                                        color: Colors.white),
+                                  child: Image.asset(
+                                    'images/message_in_a_bottle.png',
+                                    scale: 5,
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Container(
-                                  child: Text(
-                                    '請到資料欄中查看',
-                                    style: TextStyle(
-                                        fontFamily: 'Yuanti',
-                                        fontSize:
-                                            MediaQuery.of(context).size.width /
-                                                17.81,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  children: <Widget>[
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Visibility(
+                visible: moneyVisible,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  child: Row(
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: bottle_move / 3,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              moneyVisible = false;
+                              addCouponsCount(fireStore);
+                              setState(() {});
+                              EasyDialog(
+                                  cardColor: Color.fromRGBO(18, 18, 18, 1),
+                                  cornerRadius: 15.0,
+                                  fogOpacity: 0.1,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.568,
+                                  height:
+                                      MediaQuery.of(context).size.height / 4.25,
+                                  contentPadding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height /
+                                        70.83,
+                                  ), // Needed for the button design
+                                  contentList: [
                                     Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.greenAccent,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(10.0),
-                                          ),
-                                        ),
-                                        child: FlatButton(
-                                          child: Text(
-                                            "Cancel",
-                                            textScaleFactor: 1.6,
+                                      flex: 1,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 15.0)),
+                                          Text(
+                                            "恭喜！",
                                             style: TextStyle(
-                                                fontFamily: 'LilitaOne',
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width /
-                                                    24.5),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 1,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.greenAccent,
-                                            borderRadius: BorderRadius.only(
-                                              bottomRight:
-                                                  Radius.circular(10.0),
-                                            )),
-                                        child: FlatButton(
-                                          child: Text(
-                                            "OK",
-                                            textScaleFactor: 1.6,
-                                            style: TextStyle(
-                                                fontFamily: 'LilitaOne',
+                                                color: Colors.white,
+                                                fontFamily: 'Yuanti',
                                                 fontSize: MediaQuery.of(context)
                                                         .size
                                                         .width /
                                                     23.05),
+                                            textScaleFactor: 1.3,
                                           ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(left: 15.0),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          '獲得一張5元折價券',
+                                          style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  17.81,
+                                              color: Colors.white),
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          '請到設定欄中查看',
+                                          style: TextStyle(
+                                              fontFamily: 'Yuanti',
+                                              fontSize: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  17.81,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.greenAccent,
+                                                borderRadius: BorderRadius.only(
+                                                  bottomLeft:
+                                                      Radius.circular(10.0),
+                                                ),
+                                              ),
+                                              child: FlatButton(
+                                                child: Text(
+                                                  "Cancel",
+                                                  textScaleFactor: 1.6,
+                                                  style: TextStyle(
+                                                      fontFamily: 'LilitaOne',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              24.5),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 1,
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.greenAccent,
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    bottomRight:
+                                                        Radius.circular(10.0),
+                                                  )),
+                                              child: FlatButton(
+                                                child: Text(
+                                                  "OK",
+                                                  textScaleFactor: 1.6,
+                                                  style: TextStyle(
+                                                      fontFamily: 'LilitaOne',
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              23.05),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]).show(context);
+                            },
+                            child: Container(
+                              child: Image.asset(
+                                'images/coupon.png',
+                                scale: 0.6,
                               ),
-                            ]).show(context);
-                      },
-                      child: Container(
-                        child: Image.asset(
-                          'images/coupon.png',
-                          scale: 0.6,
-                        ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Expanded(child: SizedBox()),
-              ],
-            ),
-          ),
-        ),
-        FutureBuilder<bool>(
-            future: getWaveState(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data) {
-                  wave_Visible = true;
-                }
-              } else {
-                wave_Visible = false;
-              }
-              return Visibility(
-                visible: wave_Visible,
-                child: GestureDetector(
-                  //波浪animation
-                  onTap: () {},
-                  onHorizontalDragEnd: (DragEndDetails details) {},
-                  onVerticalDragEnd: (DragEndDetails detail) {
-                    wavemin = 200;
-                    wavemax = 600;
-                    drag_controller.forward();
-                    drag_controller.addStatusListener((status) {
-                      if (status == AnimationStatus.completed) {
-                        int _rng = Random().nextInt(200);
-                        _rng == 82 ? moneyVisible = true : moneyVisible = false;
-                        bottle_visible = true;
-                        drag_controller.reverse();
-                      }
-                    });
-                    drag_controller.addListener(
-                      () {
-                        setState(() {});
-                        value = drag_controller.value;
-                      },
-                    );
-                  },
-                  child: Container(
-                    child: buildWave(value, wavemin, wavemax),
+                      Expanded(child: SizedBox()),
+                    ],
                   ),
                 ),
-              );
-            }),
-      ],
-    );
+              ),
+              FutureBuilder<bool>(
+                  future: getWaveState(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data) {
+                        wave_Visible = true;
+                      }
+                    } else {
+                      wave_Visible = false;
+                    }
+                    return Visibility(
+                      visible: wave_Visible,
+                      child: GestureDetector(
+                        //波浪animation
+                        onTap: () {},
+                        onHorizontalDragEnd: (DragEndDetails details) {},
+                        onVerticalDragEnd: (DragEndDetails detail) {
+                          wavemin = 200;
+                          wavemax = 600;
+                          drag_controller.forward();
+                          drag_controller.addStatusListener((status) {
+                            if (status == AnimationStatus.completed) {
+                              int _rng = Random().nextInt(200);
+                              _rng == 82
+                                  ? moneyVisible = true
+                                  : moneyVisible = false;
+                              bottle_visible = true;
+                              drag_controller.reverse();
+                            }
+                          });
+                          drag_controller.addListener(
+                            () {
+                              setState(() {});
+                              value = drag_controller.value;
+                            },
+                          );
+                        },
+                        child: Container(
+                          child: buildWave(value, wavemin, wavemax),
+                        ),
+                      ),
+                    );
+                  }),
+            ],
+          );
+        });
   }
 }

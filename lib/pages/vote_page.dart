@@ -111,7 +111,7 @@ class _VotePageState extends State<VotePage> with TickerProviderStateMixin {
                 ),
               ), //標題列
               Text(
-                'Voting System',
+                'Voting',
                 style: TextStyle(
                   fontFamily: 'Courgette',
                   fontSize: 25,

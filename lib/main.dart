@@ -3,10 +3,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shoufeng_order/pages/accounting_content.dart';
 import 'package:shoufeng_order/pages/accounting_content_second.dart';
+import 'package:shoufeng_order/pages/edit_menu.dart';
+import 'package:shoufeng_order/pages/edit_store.dart';
 import 'package:shoufeng_order/pages/login_page.dart';
 import 'package:shoufeng_order/pages/menu_list.dart';
 import 'package:shoufeng_order/pages/menu_list_second.dart';
+import 'package:shoufeng_order/pages/newStore.dart';
 import 'package:shoufeng_order/pages/ordering_page.dart';
+import 'package:shoufeng_order/pages/signup_page.dart';
+import 'package:shoufeng_order/pages/update_reminder.dart';
 import 'package:shoufeng_order/pages/vote_content.dart';
 import 'package:shoufeng_order/tools/firebase_messagin.dart';
 import 'package:shoufeng_order/tools/login_builder.dart';
@@ -54,6 +59,11 @@ class _ShoufengState extends State<Shoufeng> {
                   '/accounting': (context) => AccountContent(),
                   '/menulist': (context) => MenuList(),
                   '/ordering': (context) => OrderingPage(),
+                  '/editmenu': (context) => EditMenuPage(),
+                  '/newstore': (context) => NewStorePage(),
+                  '/signup': (context) => SignUpPage(),
+                  '/editstore': (context) => EditStorePage(),
+                  '/updatereminder': (context) => UpdateReminderPage(),
                 },
                 home: DefaultTabController(
                   length: 1,

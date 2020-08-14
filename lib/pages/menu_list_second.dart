@@ -845,7 +845,6 @@ class _MenuListState2 extends State<MenuList2> {
                                                   ),
                                                   onPressed: () {
                                                     setState(() {
-                                                      //todo
                                                       clearOrderCache2(
                                                           fireStore);
                                                       uploadFinalOrder2(

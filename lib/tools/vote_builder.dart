@@ -52,10 +52,6 @@ void clearStoreSelect(fireStore) {
   fireStore.collection('Vote').document('storeSelect').delete();
 }
 
-void clearVoteStore(fireStore) {
-  fireStore.collection('Vote').document('VoteStore').delete();
-}
-
 void deleteVoteStore(fireStore, String storeName) {
   if (storeName != null) {
     fireStore
